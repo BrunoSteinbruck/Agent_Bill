@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="./node_modules/gsap/dist/gsap.min.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #141c19;
+      }
+
+      #root {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #141c19;
+      }
+
+      #hero-background {
+        position: absolute;
+        inset: -52px;
+        width: calc(100% + 104px);
+        height: calc(100% + 104px);
+        object-fit: cover;
+        object-position: center center;
+        filter: brightness(0.97) saturate(1.01);
+        transform-origin: center center;
+      }
+
+      #hero-shadow {
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(90deg, rgba(10, 15, 14, 0.12) 0%, rgba(10, 15, 14, 0.08) 28%, rgba(10, 15, 14, 0.03) 58%),
+          linear-gradient(180deg, rgba(10, 15, 14, 0.04), rgba(10, 15, 14, 0.14));
+      }
+
+      #hero-glow {
+        position: absolute;
+        right: 150px;
+        top: 72px;
+        width: 620px;
+        height: 620px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(244, 194, 122, 0.18), transparent 68%);
+        filter: blur(30px);
+        opacity: 0.72;
+      }
+
+      #hero-secondary-glow {
+        position: absolute;
+        left: 160px;
+        top: 120px;
+        width: 460px;
+        height: 460px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent 70%);
+        filter: blur(40px);
+        opacity: 0.46;
+      }
+
+      #hero-grain {
+        position: absolute;
+        inset: 0;
+        opacity: 0.08;
+        background-image:
+          linear-gradient(135deg, rgba(255, 255, 255, 0.14), transparent 62%),
+          radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.12), transparent 28%);
+        mix-blend-mode: screen;
+      }
+
+      #hero-vignette {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at center, transparent 56%, rgba(10, 15, 14, 0.1) 100%);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="10"
+      data-width="1920"
+      data-height="1080"
+    >
+      <img id="hero-background" src="./assets/hero-lifestyle.png" alt="" />
+      <div id="hero-shadow"></div>
+      <div id="hero-glow"></div>
+      <div id="hero-secondary-glow"></div>
+      <div id="hero-grain"></div>
+      <div id="hero-vignette"></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+
+      const tl = gsap.timeline({ paused: true });
+
+      tl.set("#hero-background", { scale: 1.015, x: 0, y: 0 }, 0);
+      tl.set("#hero-glow", { x: 0, y: 0, opacity: 0.68 }, 0);
+      tl.set("#hero-secondary-glow", { x: 0, y: 0, opacity: 0.44 }, 0);
+
+      tl.to("#hero-background", { scale: 1.05, x: -32, y: -18, duration: 5, ease: "sine.inOut" }, 0);
+      tl.to("#hero-background", { scale: 1.015, x: 0, y: 0, duration: 5, ease: "sine.inOut" }, 5);
+
+      tl.to("#hero-glow", { x: -24, y: 18, opacity: 0.88, duration: 5, ease: "sine.inOut" }, 0);
+      tl.to("#hero-glow", { x: 0, y: 0, opacity: 0.68, duration: 5, ease: "sine.inOut" }, 5);
+
+      tl.to("#hero-secondary-glow", { x: 18, y: -12, opacity: 0.56, duration: 5, ease: "sine.inOut" }, 0);
+      tl.to("#hero-secondary-glow", { x: 0, y: 0, opacity: 0.44, duration: 5, ease: "sine.inOut" }, 5);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
