@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import styles from "../product-app.module.css";
 
+const brandImageSrc = "/images/bill-favicon-max.png";
+
 type NavItem = {
   href: string;
   label: string;
@@ -86,24 +88,10 @@ export function ProductShell({ children }: { children: ReactNode }) {
           <div className={styles.sidebarTop}>
             <Link className={styles.brandLink} href="/">
               <span className={styles.brandMark} aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" className={styles.icon}>
-                  <path
-                    d="M6.5 8.5c0-2.76 2.74-5 6.12-5 1.63 0 3.11.52 4.2 1.38.72.56 1.08 1.51.94 2.41l-.34 2.18c-.14.86-.79 1.55-1.63 1.75l-2.46.58c-.87.2-1.78.2-2.65 0l-2.46-.58a2.1 2.1 0 0 1-1.63-1.75L6.5 8.5Z"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M8.25 13.1c.58.93 1.93 1.65 3.75 1.65s3.17-.72 3.75-1.65M9.15 17.75c.72.49 1.73.8 2.85.8 1.12 0 2.13-.31 2.85-.8"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                    strokeLinecap="round"
-                  />
-                </svg>
+                <img className={styles.brandMarkImage} src={brandImageSrc} alt="" />
               </span>
               <span className={styles.brandText}>
                 <span className={styles.brandName}>Bill</span>
-                <span className={styles.brandMeta}>Governed card console</span>
               </span>
             </Link>
 

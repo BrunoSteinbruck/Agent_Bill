@@ -20,7 +20,11 @@ export function DocsShell({ page }: DocsShellProps) {
       <header className={styles.topBar}>
         <Link className={styles.brand} href="/">
           <span className={styles.brandMark} aria-hidden="true">
-            <img className={styles.brandMarkImage} src="/images/main-page-owl.png" alt="" />
+            <img
+              className={styles.brandMarkImage}
+              src="/images/bill-favicon-max.png"
+              alt=""
+            />
           </span>
           <span className={styles.brandText}>
             <span className={styles.brandName}>Bill</span>

@@ -17,7 +17,6 @@ export default function CardPage() {
       <header className={styles.pageHeader}>
         <div>
           <h1>Card</h1>
-          <p>One governed virtual card, organized around what matters and nothing else.</p>
         </div>
 
         <div className={styles.tabBar}>
@@ -57,11 +56,11 @@ export default function CardPage() {
             <p className={styles.panelEyebrow}>Card posture</p>
             <div className={styles.infoGrid}>
               <div className={styles.infoCard}>
-                <span className={styles.infoLabel}>Spendable now</span>
+                <span className={styles.infoLabel}>Available balance</span>
                 <strong className={styles.statValue}>{currency(cardSummary.spendableNow)}</strong>
               </div>
               <div className={styles.infoCard}>
-                <span className={styles.infoLabel}>Wallet linked</span>
+                <span className={styles.infoLabel}>Total balance</span>
                 <strong className={`${styles.statValue} ${styles.statValuePositive}`}>
                   {currency(cardSummary.walletLinkedValue)}
                 </strong>
@@ -71,16 +70,12 @@ export default function CardPage() {
                 <strong className={styles.statValue}>{cardSummary.nextRenewal}</strong>
               </div>
             </div>
-            <p className={styles.panelNote}>
-              Linked wallet value, spendable balance, and the next renewal window in one place.
-            </p>
           </article>
         </section>
 
         <section id="spending" className={`${styles.panel} ${styles.sectionStack}`}>
           <div>
             <p className={styles.panelEyebrow}>Monthly spending</p>
-            <h2 className={styles.alertTitle}>Four-month card activity</h2>
           </div>
 
           <div className={styles.stackedChart}>
@@ -174,16 +169,12 @@ export default function CardPage() {
             <article key={control.label} className={`${styles.panel} ${styles.settingsCard}`}>
               <p className={styles.panelEyebrow}>{control.label}</p>
               <p className={styles.controlValue}>{control.value}</p>
-              <p className={styles.panelNote}>{control.note}</p>
             </article>
           ))}
 
           <article className={`${styles.panel} ${styles.settingsCard}`}>
             <p className={styles.panelEyebrow}>Actions</p>
             <p className={styles.controlValue}>Manage live posture</p>
-            <p className={styles.panelNote}>
-              Review live thresholds or freeze the card before the next renewal window.
-            </p>
             <div className={styles.controlActions}>
               <button type="button" className={styles.primaryAction}>
                 Review limits

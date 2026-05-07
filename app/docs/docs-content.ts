@@ -30,7 +30,7 @@ const docsPages: DocPage[] = [
     navLabel: "What is Bill?",
     title: "What is Bill?",
     deck:
-      "Bill is a subscription assistant for governed recurring spend. It watches billing patterns, highlights the moments that deserve a decision, and stays quiet when behavior remains normal.",
+      "Bill is a subscription assistant for recurring spend. It watches billing patterns, highlights the moments that deserve a decision, and stays quiet when behavior remains normal.",
     intro: [
       "Bill is designed for people who already manage money digitally, but do not want to manually monitor every subscription, every month, forever.",
       "The product story starts with subscription management, not infrastructure. The infrastructure matters, but it exists to support calm decisions around recurring spend.",
@@ -41,7 +41,7 @@ const docsPages: DocPage[] = [
         title: "Why start with subscriptions",
         paragraphs: [
           "Recurring spend is where silent drift happens. Prices increase, descriptors change, renewals keep firing, and people usually notice only after enough charges have accumulated.",
-          "Bill turns that background noise into a small set of high-signal decisions: what changed, why it matters, and what action is available now.",
+          "Bill keeps the visible set small: what changed, why it matters, and what action is available now.",
         ],
       },
       {
@@ -61,7 +61,7 @@ const docsPages: DocPage[] = [
         id: "v1-promise",
         title: "The V1 promise",
         paragraphs: [
-          "Bill does not promise autonomous wallet movement in V1. The wallet remains user-controlled and the assistant focuses on governing the card layer.",
+          "Bill does not promise autonomous wallet movement in V1. The wallet remains user-controlled and the assistant focuses on card-level rules.",
           "That means Bill can review changes, surface prompts, support rules, and improve decision quality without overclaiming custody or autonomous funding capabilities.",
         ],
         callout:
@@ -177,7 +177,7 @@ const docsPages: DocPage[] = [
         title: "Wallet control model",
         paragraphs: [
           "V1 keeps the wallet user-controlled. Bill does not autonomously move funds and does not take custody.",
-          "The agent governs card behavior and decision prompts, while the wallet remains the user's domain.",
+          "The agent handles card behavior and decision prompts, while the wallet remains the user's domain.",
         ],
       },
       {
@@ -205,7 +205,7 @@ const docsPages: DocPage[] = [
     navLabel: "V1 Scope",
     title: "V1 Scope",
     deck:
-      "Bill V1 is intentionally narrow: govern subscription-related card behavior well, keep the wallet user-controlled, and avoid claiming automation that is not there yet.",
+      "Bill V1 is intentionally narrow: handle subscription-related card behavior well, keep the wallet user-controlled, and avoid claiming automation that is not there yet.",
     intro: [
       "The project becomes stronger when the scope is honest. Bill V1 should solve one category of problem clearly before expanding into broader automation.",
       "This page summarizes what Bill can do now, what is only advisory, and what remains intentionally out of scope for the first version.",

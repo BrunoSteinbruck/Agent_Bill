@@ -100,7 +100,7 @@ type SiteCopy = {
 export const siteCopy: Record<LocaleCode, SiteCopy> = {
   en: {
     ui: {
-      brandDescriptor: "Subscription assistant",
+      brandDescriptor: "Your personal subscription agent",
       localeLabel: "Locale selector",
       v1Scope: "V1 scope",
       updatingLanguage: "Updating language...",
@@ -170,7 +170,7 @@ export const siteCopy: Record<LocaleCode, SiteCopy> = {
       kicker: "Scenarios",
       title: "Concrete decisions, presented with calm instead of noise.",
       description:
-        "Bill turns recurring spend into a short list of high-signal moments: what changed, why it matters, and what you can do next.",
+        "Bill keeps recurring spend short and clear: what changed, why it matters, and what you can do next.",
       items: [
         {
           tag: "Price change detected",
@@ -234,7 +234,7 @@ export const siteCopy: Record<LocaleCode, SiteCopy> = {
         "Bill is designed for the V1 reality: user-controlled funds, balanced-risk card decisions, and no autonomous wallet movement behind the scenes.",
       bullets: [
         "Your wallet stays user-controlled.",
-        "The agent governs card spending, not custody.",
+        "The agent handles card spending, not custody.",
         "Funding suggestions stay advisory in V1.",
       ],
       panelTitle: "What Bill can do now",
@@ -252,7 +252,7 @@ export const siteCopy: Record<LocaleCode, SiteCopy> = {
         },
         {
           title: "Brazil-first rollout",
-          text: "The initial market framing stays local while the product language still feels global.",
+          text: "The first rollout stays local while the product language remains clear.",
         },
         {
           title: "Stablecoin-first stack",
@@ -295,7 +295,7 @@ export const siteCopy: Record<LocaleCode, SiteCopy> = {
       ],
     },
     footer: {
-      summary: "Bill is a subscription assistant for governed recurring spend.",
+      summary: "Bill is a subscription assistant for recurring spend.",
       rights: "Designed for the V1 reality.",
     },
   },
@@ -435,7 +435,7 @@ export const siteCopy: Record<LocaleCode, SiteCopy> = {
         "Bill foi desenhado para a realidade da V1: fundos sob controle do usuario, decisoes balanced-risk no cartao e nenhum movimento autonomo da wallet por tras.",
       bullets: [
         "Sua wallet continua user-controlled.",
-        "O agent governa gasto no cartao, nao custodia.",
+        "O agent acompanha gasto no cartao, nao custodia.",
         "Funding suggestions continuam consultivas na V1.",
       ],
       panelTitle: "O que Bill consegue fazer agora",
@@ -453,7 +453,7 @@ export const siteCopy: Record<LocaleCode, SiteCopy> = {
         },
         {
           title: "Rollout Brazil-first",
-          text: "O primeiro recorte de mercado e local, enquanto a linguagem do produto continua global.",
+          text: "O primeiro rollout fica local, enquanto a linguagem do produto continua clara.",
         },
         {
           title: "Stack stablecoin-first",
@@ -496,7 +496,7 @@ export const siteCopy: Record<LocaleCode, SiteCopy> = {
       ],
     },
     footer: {
-      summary: "Bill e um assistente de assinaturas para gasto recorrente governado.",
+      summary: "Bill e um assistente de assinaturas para gasto recorrente.",
       rights: "Desenhado para a realidade da V1.",
     },
   },

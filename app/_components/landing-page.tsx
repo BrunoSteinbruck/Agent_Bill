@@ -10,7 +10,7 @@ const heroImageSrc = "/images/subscription-scenarios-triptych.png";
 const heroPosterSrc = "/images/hero-poster.webp";
 const heroVideoMp4Src = "/videos/hero.mp4";
 const heroVideoWebmSrc = "/videos/hero.webm";
-const brandImageSrc = "/images/main-page-owl.png";
+const brandImageSrc = "/images/bill-favicon-max.png";
 const scenarioImagePositions = ["14% center", "50% center", "86% center"] as const;
 const featureMascotClasses = [
   "featureMascotSearch",

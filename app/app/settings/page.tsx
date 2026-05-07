@@ -7,7 +7,6 @@ export default function SettingsPage() {
       <header className={styles.pageHeader}>
         <div>
           <h1>Settings</h1>
-          <p>Quiet defaults for display, notifications, and governed-spend behavior.</p>
         </div>
       </header>
 

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
     template: "%s | Bill Docs",
   },
   description:
-    "Documentation for Bill, the subscription assistant for governed recurring spend.",
+    "Documentation for Bill, the subscription assistant for recurring spend.",
 };
 
 export default function DocsLayout({

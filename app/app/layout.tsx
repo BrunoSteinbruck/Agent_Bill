@@ -4,7 +4,7 @@ import { ProductShell } from "./_components/product-shell";
 
 export const metadata: Metadata = {
   title: "Bill App",
-  description: "Governed card console for recurring spend and wallet-linked funding visibility.",
+  description: "Dashboard for card spend and available balance.",
 };
 
 export default function AppLayout({ children }: { children: ReactNode }) {

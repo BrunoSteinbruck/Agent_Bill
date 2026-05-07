@@ -2,31 +2,30 @@
   --font-display: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", "URW Palladio L",
     Georgia, serif;
   --font-body: "Avenir Next", "Optima", "Segoe UI", sans-serif;
-  --page-background: #f4ede4;
-  --page-background-alt: #efe7db;
-  --text-primary: #1c332c;
-  --text-muted: #546761;
-  --text-soft: #70827b;
-  --accent-strong: #2f5d50;
-  --warm-accent: #bc8d57;
-  --line: rgba(24, 46, 40, 0.12);
-  --app-bg: #111513;
-  --app-sidebar: #151a17;
-  --app-surface: #1b211e;
-  --app-surface-2: #222925;
-  --app-line: rgba(233, 223, 211, 0.08);
-  --app-text-primary: #ede3d6;
-  --app-text-secondary: #b2a79a;
-  --app-text-muted: #857c72;
-  --accent-evergreen: #2c5548;
-  --accent-evergreen-soft: rgba(44, 85, 72, 0.18);
-  --accent-bronze: #9f7750;
-  --accent-bronze-soft: rgba(159, 119, 80, 0.18);
-  --status-positive: #416857;
-  --status-warning: #9a7650;
-  --status-danger: #8a5751;
-  --chart-funding: #3e6556;
-  --chart-spend: #9a5e58;
+  --page-background: #05040a;
+  --page-background-alt: #090713;
+  --page-surface: #14101f;
+  --page-surface-2: #1b1628;
+  --text-primary: #f1ecff;
+  --text-muted: #a99bc2;
+  --text-soft: #7f7199;
+  --accent-strong: #8b5cf6;
+  --accent-secondary: #6366f1;
+  --line: rgba(167, 139, 250, 0.16);
+  --app-bg: #05040a;
+  --app-sidebar: #090713;
+  --app-surface: #14101f;
+  --app-surface-2: #1b1628;
+  --app-line: rgba(167, 139, 250, 0.16);
+  --app-text-primary: #f1ecff;
+  --app-text-secondary: #c6b8e6;
+  --app-text-muted: #a99bc2;
+  --accent-soft: rgba(139, 92, 246, 0.18);
+  --status-positive: #38bdf8;
+  --status-warning: #8b5cf6;
+  --status-danger: #f472b6;
+  --chart-funding: #6366f1;
+  --chart-spend: #8b5cf6;
 }
 
 * {
@@ -42,25 +41,13 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   background:
-    linear-gradient(180deg, var(--page-background), var(--page-background-alt)),
-    var(--page-background);
+    radial-gradient(circle at 16% 0%, rgba(139, 92, 246, 0.18), transparent 28rem),
+    radial-gradient(circle at 88% 8%, rgba(56, 189, 248, 0.08), transparent 22rem),
+    linear-gradient(180deg, var(--page-background-alt), var(--page-background));
   color: var(--text-primary);
   font-family: var(--font-body);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at top left, rgba(255, 255, 255, 0.76), transparent 34%),
-    radial-gradient(circle at 85% 10%, rgba(188, 141, 87, 0.08), transparent 22%),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 60%);
-  opacity: 0.55;
 }
 
 a {
@@ -80,5 +67,6 @@ video {
 }
 
 ::selection {
-  background: rgba(47, 93, 80, 0.16);
+  background: rgba(139, 92, 246, 0.32);
+  color: #ffffff;
 }
