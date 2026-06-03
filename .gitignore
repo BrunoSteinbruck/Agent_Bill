@@ -7,3 +7,10 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 .DS_Store
+
+# Local environment files (never commit secrets). .env.example stays tracked.
+.env
+.env*.local
+
+# TypeScript incremental build artifact
+*.tsbuildinfo
