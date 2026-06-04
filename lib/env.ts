@@ -67,6 +67,32 @@ export const serverEnv = {
     assertServer("ANTHROPIC_API_KEY");
     return required("ANTHROPIC_API_KEY", process.env.ANTHROPIC_API_KEY);
   },
+
+  // --- Waitlist invites (optional) -----------------------------------------
+  // Resend powers the "you're in" invite emails. Optional on purpose: with no
+  // key set, the admin page still works and status flips still persist — the
+  // email step just degrades to a no-op (see lib/email/invite.ts).
+  get resendApiKey(): string | null {
+    assertServer("RESEND_API_KEY");
+    return process.env.RESEND_API_KEY?.trim() || null;
+  },
+  // The From address for invite emails. Resend's shared sandbox sender works
+  // out of the box; swap for a verified domain before real sends.
+  get waitlistFromEmail(): string {
+    assertServer("WAITLIST_FROM_EMAIL");
+    return (
+      process.env.WAITLIST_FROM_EMAIL?.trim() || "Bill <onboarding@resend.dev>"
+    );
+  },
+  // Comma-separated allowlist of emails that may reach /admin. Compared
+  // case-insensitively. Empty → nobody is an admin (the page 404s for all).
+  get adminEmails(): string[] {
+    assertServer("ADMIN_EMAILS");
+    return (process.env.ADMIN_EMAILS ?? "")
+      .split(",")
+      .map((entry) => entry.trim().toLowerCase())
+      .filter(Boolean);
+  },
 };
 
 function assertServer(name: string) {

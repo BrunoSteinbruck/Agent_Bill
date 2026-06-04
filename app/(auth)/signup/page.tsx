@@ -5,9 +5,9 @@ import styles from "../auth.module.css";
 export default async function SignupPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; email?: string }>;
 }) {
-  const { error } = await searchParams;
+  const { error, email } = await searchParams;
 
   return (
     <main className={styles.screen}>
@@ -35,6 +35,7 @@ export default async function SignupPage({
               name="email"
               type="email"
               autoComplete="email"
+              defaultValue={email ?? ""}
               required
             />
           </div>

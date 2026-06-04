@@ -123,6 +123,7 @@ export type WaitlistEntry = {
   stack: string | null;
   reason: string | null;
   locale: string | null;
+  source: string | null;
   status: WaitlistStatus;
   created_at: string;
 };

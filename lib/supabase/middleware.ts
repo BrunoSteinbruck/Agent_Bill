@@ -51,7 +51,12 @@ export async function updateSession(
   } = await supabase.auth.getUser();
 
   const { pathname } = request.nextUrl;
-  const isProtected = pathname.startsWith("/app");
+  // `/admin` is guarded here only for "must be signed in"; the email allowlist
+  // (lib/auth/admin.ts) runs in the page/actions, which is where the
+  // service-role key and ADMIN_EMAILS live. A non-admin signed-in user reaching
+  // /admin gets a 404 from the page, not a redirect.
+  const isProtected =
+    pathname.startsWith("/app") || pathname.startsWith("/admin");
   const isAuthPage = pathname === "/login" || pathname === "/signup";
 
   if (!user && isProtected) {

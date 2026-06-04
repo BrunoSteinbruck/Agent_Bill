@@ -37,6 +37,7 @@ export function LandingPage() {
   const [submitting, setSubmitting] = useState(false);
   const [shouldRenderHeroVideo, setShouldRenderHeroVideo] = useState(false);
   const [heroVideoFailed, setHeroVideoFailed] = useState(false);
+  const [source, setSource] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
@@ -49,6 +50,12 @@ export function LandingPage() {
     }
 
     setLocale(getBrowserLocale());
+  }, []);
+
+  useEffect(() => {
+    // Acquisition attribution: prefer utm_source, fall back to a ?ref= tag.
+    const params = new URLSearchParams(window.location.search);
+    setSource(params.get("utm_source") ?? params.get("ref"));
   }, []);
 
   useEffect(() => {
@@ -106,7 +113,9 @@ export function LandingPage() {
           country: data.get("country"),
           stack: data.get("stack"),
           reason: data.get("reason"),
+          company: data.get("company"),
           locale,
+          source,
         }),
       });
 
@@ -361,6 +370,16 @@ export function LandingPage() {
         </div>
 
         <form className={styles.applicationForm} onSubmit={handleSubmit}>
+          {/* Honeypot — hidden from humans, catches bots. Do not remove. */}
+          <input
+            className={styles.honeypot}
+            type="text"
+            name="company"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+          />
+
           <label>
             <span>{copy.form.fields.name}</span>
             <input name="name" placeholder={copy.form.placeholders.name} required />

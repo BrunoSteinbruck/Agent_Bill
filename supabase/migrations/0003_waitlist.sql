@@ -19,6 +19,9 @@ create table waitlist (
   stack       text,
   reason      text,
   locale      text,
+  -- Acquisition source for attribution (e.g. utm_source=twitter, a ?ref=...).
+  -- Lets you measure which posts / channels drive signups before launch.
+  source      text,
   status      text not null default 'pending',
   created_at  timestamptz not null default now(),
   unique (email)
