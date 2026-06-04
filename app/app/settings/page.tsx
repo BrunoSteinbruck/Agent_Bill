@@ -1,7 +1,8 @@
-import { settingsGroups } from "../mock-data";
+import { getAccountView } from "../../../lib/data/account";
 import styles from "../product-app.module.css";
 
-export default function SettingsPage() {
+export default async function SettingsPage() {
+  const { settings: settingsGroups } = await getAccountView();
   return (
     <>
       <header className={styles.pageHeader}>

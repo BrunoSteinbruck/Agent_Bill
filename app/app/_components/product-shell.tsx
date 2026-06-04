@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+import { signOut } from "../../(auth)/actions";
 import styles from "../product-app.module.css";
 
 const brandImageSrc = "/images/bill-favicon-max.png";
@@ -133,18 +134,20 @@ export function ProductShell({ children }: { children: ReactNode }) {
               <span className={styles.currencyPill}>BTC</span>
             </div>
 
-            <button type="button" className={styles.logoutButton}>
-              <svg viewBox="0 0 24 24" fill="none" className={styles.icon} aria-hidden="true">
-                <path
-                  d="M10 6.25H7.75A2.75 2.75 0 0 0 5 9v6a2.75 2.75 0 0 0 2.75 2.75H10M14 8.25l3.75 3.75L14 15.75M17.5 12H9.25"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <span className={styles.navLabel}>Log out</span>
-            </button>
+            <form action={signOut} style={{ display: "contents" }}>
+              <button type="submit" className={styles.logoutButton}>
+                <svg viewBox="0 0 24 24" fill="none" className={styles.icon} aria-hidden="true">
+                  <path
+                    d="M10 6.25H7.75A2.75 2.75 0 0 0 5 9v6a2.75 2.75 0 0 0 2.75 2.75H10M14 8.25l3.75 3.75L14 15.75M17.5 12H9.25"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <span className={styles.navLabel}>Log out</span>
+              </button>
+            </form>
           </div>
         </aside>
 

@@ -33,6 +33,8 @@ export function LandingPage() {
   const [locale, setLocale] = useState<LocaleCode>("en");
   const [hasExplicitLocale, setHasExplicitLocale] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [shouldRenderHeroVideo, setShouldRenderHeroVideo] = useState(false);
   const [heroVideoFailed, setHeroVideoFailed] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -86,10 +88,39 @@ export function LandingPage() {
     });
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    event.currentTarget.reset();
-    setSubmitted(true);
+    const form = event.currentTarget;
+    const data = new FormData(form);
+
+    setSubmitting(true);
+    setSubmitError(false);
+
+    try {
+      const response = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.get("name"),
+          email: data.get("email"),
+          country: data.get("country"),
+          stack: data.get("stack"),
+          reason: data.get("reason"),
+          locale,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("waitlist submit failed");
+      }
+
+      form.reset();
+      setSubmitted(true);
+    } catch {
+      setSubmitError(true);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -365,12 +396,19 @@ export function LandingPage() {
             />
           </label>
 
-          <button className={styles.primaryButton} type="submit">
+          <button className={styles.primaryButton} type="submit" disabled={submitting}>
             {copy.form.submit}
           </button>
 
           <p className={styles.formNote}>{copy.form.note}</p>
           {submitted ? <p className={styles.formSuccess}>{copy.form.success}</p> : null}
+          {submitError ? (
+            <p className={styles.formNote}>
+              {locale === "pt"
+                ? "Não foi possível enviar agora. Tente novamente em instantes."
+                : "We couldn't submit that just now. Please try again."}
+            </p>
+          ) : null}
         </form>
       </section>
 

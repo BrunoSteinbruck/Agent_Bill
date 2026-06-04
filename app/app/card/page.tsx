@@ -1,5 +1,6 @@
-import { cardSummary, controls, monthlySpending, subscriptions } from "../mock-data";
+import { getAccountView } from "../../../lib/data/account";
 import styles from "../product-app.module.css";
+import { CardActions } from "./_components/card-actions";
 
 function currency(value: number) {
   return new Intl.NumberFormat("en-US", {
@@ -9,8 +10,19 @@ function currency(value: number) {
   }).format(value);
 }
 
-export default function CardPage() {
-  const maxSpend = Math.max(...monthlySpending.map((item) => item.total));
+export default async function CardPage() {
+  const { card, cardToken } = await getAccountView();
+  const { controls, monthlySpending, subscriptions } = card;
+  const cardSummary = {
+    holder: card.holder,
+    last4: card.last4,
+    network: card.network,
+    status: card.status,
+    spendableNow: card.spendableNow,
+    walletLinkedValue: card.walletLinkedValue,
+    nextRenewal: card.nextRenewal,
+  };
+  const maxSpend = Math.max(1, ...monthlySpending.map((item) => item.total));
 
   return (
     <>
@@ -175,14 +187,7 @@ export default function CardPage() {
           <article className={`${styles.panel} ${styles.settingsCard}`}>
             <p className={styles.panelEyebrow}>Actions</p>
             <p className={styles.controlValue}>Manage live posture</p>
-            <div className={styles.controlActions}>
-              <button type="button" className={styles.primaryAction}>
-                Review limits
-              </button>
-              <button type="button" className={styles.secondaryAction}>
-                Freeze card
-              </button>
-            </div>
+            <CardActions cardToken={cardToken} frozen={cardSummary.status === "Frozen"} />
           </article>
         </section>
       </div>

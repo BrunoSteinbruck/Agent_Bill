@@ -27,6 +27,8 @@ async function crossmintFetch<T>(
   init?: RequestInit,
 ): Promise<T> {
   const res = await fetch(`${baseUrl()}${path}`, {
+    // Financial data must always be fresh — never serve a cached balance.
+    cache: "no-store",
     ...init,
     headers: {
       "X-API-KEY": serverEnv.crossmintApiKey,

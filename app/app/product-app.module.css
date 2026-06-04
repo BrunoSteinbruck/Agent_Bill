@@ -397,6 +397,26 @@
   gap: 0.55rem;
 }
 
+.controlActions {
+  align-items: center;
+}
+
+a.primaryAction {
+  text-decoration: none;
+}
+
+.primaryAction:disabled,
+.secondaryAction:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.actionError {
+  flex-basis: 100%;
+  color: #fca5a5;
+  font-size: 0.82rem;
+}
+
 .legendItem,
 .tagItem {
   align-items: center;

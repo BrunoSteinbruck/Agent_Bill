@@ -113,6 +113,20 @@ export type AgentDecision = {
   created_at: string;
 };
 
+export type WaitlistStatus = "pending" | "invited" | "rejected";
+
+export type WaitlistEntry = {
+  id: string;
+  name: string;
+  email: string;
+  country: string | null;
+  stack: string | null;
+  reason: string | null;
+  locale: string | null;
+  status: WaitlistStatus;
+  created_at: string;
+};
+
 /**
  * Minimal shape compatible with supabase-js generics. Each table lists Row /
  * Insert / Update; Insert makes server-defaulted columns optional.
@@ -168,6 +182,16 @@ export interface Database {
           created_at?: string;
         };
         Update: Partial<AgentDecision>;
+        Relationships: [];
+      };
+      waitlist: {
+        Row: WaitlistEntry;
+        Insert: Omit<WaitlistEntry, "id" | "status" | "created_at"> & {
+          id?: string;
+          status?: WaitlistStatus;
+          created_at?: string;
+        };
+        Update: Partial<WaitlistEntry>;
         Relationships: [];
       };
     };

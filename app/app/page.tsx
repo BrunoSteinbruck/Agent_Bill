@@ -1,4 +1,4 @@
-import { dashboardSummary } from "./mock-data";
+import { getAccountView } from "../../lib/data/account";
 import styles from "./product-app.module.css";
 
 function currency(value: number) {
@@ -9,8 +9,10 @@ function currency(value: number) {
   }).format(value);
 }
 
-export default function AppDashboardPage() {
+export default async function AppDashboardPage() {
+  const { dashboard: dashboardSummary } = await getAccountView();
   const maxHistoryValue = Math.max(
+    1,
     ...dashboardSummary.history.map((point) => point.spend),
   );
 
