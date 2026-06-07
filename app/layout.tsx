@@ -5,15 +5,7 @@ export const metadata: Metadata = {
   title: "Bill | Subscription assistant for recurring spend",
   description:
     "Bill watches recurring spend, flags subscription changes, and keeps card decisions clear without moving your wallet.",
-  icons: {
-    icon: [
-      { url: "/images/bill-favicon-max.png", sizes: "32x32", type: "image/png" },
-      { url: "/images/bill-favicon-max.png", sizes: "64x64", type: "image/png" },
-      { url: "/images/bill-favicon-max.png", sizes: "192x192", type: "image/png" },
-    ],
-    shortcut: "/images/bill-favicon-max.png",
-    apple: "/images/bill-favicon-max.png",
-  },
+  // Favicon is served from app/icon.png (the brand logo), auto-detected by Next.
 };
 
 export default function RootLayout({

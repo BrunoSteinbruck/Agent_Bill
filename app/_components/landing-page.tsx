@@ -1,16 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useEffect, useState, useTransition } from "react";
-import { siteCopy, type LocaleCode } from "../site-content";
+import { FormEvent, useEffect, useState } from "react";
+import { siteCopy } from "../site-content";
 import styles from "./landing-page.module.css";
 
-const storageKey = "bill-locale";
 const heroImageSrc = "/images/subscription-scenarios-triptych.png";
 const heroPosterSrc = "/images/hero-poster.webp";
 const heroVideoMp4Src = "/videos/hero.mp4";
 const heroVideoWebmSrc = "/videos/hero.webm";
-const brandImageSrc = "/images/bill-favicon-max.png";
+const brandImageSrc = "/images/bill-logo.png";
 const scenarioImagePositions = ["14% center", "50% center", "86% center"] as const;
 const featureMascotClasses = [
   "featureMascotSearch",
@@ -18,53 +17,19 @@ const featureMascotClasses = [
   "featureMascotShield",
 ] as const;
 
-function getBrowserLocale(): LocaleCode {
-  if (typeof navigator === "undefined") {
-    return "en";
-  }
-
-  const languages = navigator.languages ?? [navigator.language];
-  return languages.some((language) => language.toLowerCase().startsWith("pt"))
-    ? "pt"
-    : "en";
-}
-
 export function LandingPage() {
-  const [locale, setLocale] = useState<LocaleCode>("en");
-  const [hasExplicitLocale, setHasExplicitLocale] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [shouldRenderHeroVideo, setShouldRenderHeroVideo] = useState(false);
   const [heroVideoFailed, setHeroVideoFailed] = useState(false);
   const [source, setSource] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
-
-  useEffect(() => {
-    const storedLocale = window.localStorage.getItem(storageKey);
-
-    if (storedLocale === "en" || storedLocale === "pt") {
-      setLocale(storedLocale);
-      setHasExplicitLocale(true);
-      return;
-    }
-
-    setLocale(getBrowserLocale());
-  }, []);
 
   useEffect(() => {
     // Acquisition attribution: prefer utm_source, fall back to a ?ref= tag.
     const params = new URLSearchParams(window.location.search);
     setSource(params.get("utm_source") ?? params.get("ref"));
   }, []);
-
-  useEffect(() => {
-    document.documentElement.lang = locale === "pt" ? "pt-BR" : "en";
-
-    if (hasExplicitLocale) {
-      window.localStorage.setItem(storageKey, locale);
-    }
-  }, [hasExplicitLocale, locale]);
 
   useEffect(() => {
     const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -85,15 +50,8 @@ export function LandingPage() {
     };
   }, []);
 
-  const copy = siteCopy[locale];
+  const copy = siteCopy.en;
   const showHeroVideo = shouldRenderHeroVideo && !heroVideoFailed;
-
-  const handleLocaleChange = (nextLocale: LocaleCode) => {
-    startTransition(() => {
-      setLocale(nextLocale);
-      setHasExplicitLocale(true);
-    });
-  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -114,7 +72,7 @@ export function LandingPage() {
           stack: data.get("stack"),
           reason: data.get("reason"),
           company: data.get("company"),
-          locale,
+          locale: "en",
           source,
         }),
       });
@@ -155,25 +113,6 @@ export function LandingPage() {
           </nav>
 
           <div className={styles.headerActions}>
-            <div className={styles.localeToggle} aria-label={copy.ui.localeLabel}>
-              <button
-                type="button"
-                className={locale === "en" ? styles.localeActive : ""}
-                aria-pressed={locale === "en"}
-                onClick={() => handleLocaleChange("en")}
-              >
-                EN
-              </button>
-              <button
-                type="button"
-                className={locale === "pt" ? styles.localeActive : ""}
-                aria-pressed={locale === "pt"}
-                onClick={() => handleLocaleChange("pt")}
-              >
-                PT-BR
-              </button>
-            </div>
-
             <a className={styles.headerCta} href="#apply">
               {copy.navigation.apply}
             </a>
@@ -423,9 +362,7 @@ export function LandingPage() {
           {submitted ? <p className={styles.formSuccess}>{copy.form.success}</p> : null}
           {submitError ? (
             <p className={styles.formNote}>
-              {locale === "pt"
-                ? "Não foi possível enviar agora. Tente novamente em instantes."
-                : "We couldn't submit that just now. Please try again."}
+              We couldn&apos;t submit that just now. Please try again.
             </p>
           ) : null}
         </form>
@@ -434,7 +371,6 @@ export function LandingPage() {
       <footer className={styles.footer}>
         <p>{copy.footer.summary}</p>
         <small>{copy.footer.rights}</small>
-        {isPending ? <span className={styles.pendingHint}>{copy.ui.updatingLanguage}</span> : null}
       </footer>
     </main>
   );

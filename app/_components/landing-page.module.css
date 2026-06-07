@@ -120,17 +120,6 @@
   color: var(--text-primary);
 }
 
-.localeToggle {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.25rem;
-  padding: 0.22rem;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.localeToggle button,
 .primaryButton,
 .headerCta,
 .messageActions button,
@@ -147,19 +136,6 @@
   height: 1px;
   opacity: 0;
   pointer-events: none;
-}
-
-.localeToggle button {
-  border: 0;
-  padding: 0.4rem 0.55rem;
-  color: var(--text-muted);
-  background: transparent;
-  cursor: pointer;
-}
-
-.localeActive {
-  background: var(--accent-soft) !important;
-  color: var(--text-primary) !important;
 }
 
 .primaryButton,
@@ -251,9 +227,10 @@
 .heroCardTitle {
   margin: 0.8rem 0;
   max-width: 34rem;
-  font-size: clamp(3rem, 7vw, 6rem);
-  line-height: 0.9;
-  letter-spacing: -0.06em;
+  font-size: clamp(2rem, 4.25vw, 3.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  white-space: pre-line;
 }
 
 .heroCardDescription {

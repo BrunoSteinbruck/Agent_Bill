@@ -6,7 +6,7 @@ import type { ReactNode } from "react";
 import { signOut } from "../../(auth)/actions";
 import styles from "../product-app.module.css";
 
-const brandImageSrc = "/images/bill-favicon-max.png";
+const brandImageSrc = "/images/bill-logo.png";
 
 type NavItem = {
   href: string;

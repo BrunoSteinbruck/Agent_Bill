@@ -1,4 +1,4 @@
-export type LocaleCode = "en" | "pt";
+export type LocaleCode = "en";
 
 type SiteCopy = {
   ui: {
@@ -113,29 +113,28 @@ export const siteCopy: Record<LocaleCode, SiteCopy> = {
     },
     hero: {
       eyebrow: "Calm control for recurring spend",
-      title: "A calmer way to manage subscriptions.",
-      description:
-        "Bill flags quiet price increases, blocks suspicious recurring charges, and asks before billing decisions that deserve your attention.",
+      title: "All your subscriptions.\nYour Agent looking for you.",
+      description: "An easier way to keep control of your subscriptions",
       primaryCta: "Apply for access",
-      supportEyebrow: "Bill assistant",
+      supportEyebrow: "Bill assistant notifications",
       supportRows: [
         {
-          symbol: "Z",
-          merchant: "Z Cloud",
+          symbol: "A",
+          merchant: "Adobe Creative Cloud Pro",
           note: "Price change detected",
-          amount: "$31.00",
+          amount: "$71.00",
           time: "1 min ago",
         },
         {
-          symbol: "S",
-          merchant: "Streamline",
+          symbol: "N",
+          merchant: "Netflixx",
           note: "Suspicious charge blocked",
-          amount: "$89.00",
+          amount: "$69.00",
           time: "3 min ago",
         },
         {
           symbol: "D",
-          merchant: "Design Vault",
+          merchant: "DaVinci Resolve",
           note: "9 months active",
           amount: "Review",
           time: "Today",
@@ -297,207 +296,6 @@ export const siteCopy: Record<LocaleCode, SiteCopy> = {
     footer: {
       summary: "Bill is a subscription assistant for recurring spend.",
       rights: "Designed for the V1 reality.",
-    },
-  },
-  pt: {
-    ui: {
-      brandDescriptor: "Assistente de assinaturas",
-      localeLabel: "Seletor de idioma",
-      v1Scope: "Escopo da V1",
-      updatingLanguage: "Atualizando idioma...",
-    },
-    navigation: {
-      features: "Features",
-      infrastructure: "Infrastructure",
-      docs: "Docs",
-      apply: "Apply",
-    },
-    hero: {
-      eyebrow: "Controle calmo para gastos recorrentes",
-      title: "Uma forma mais calma de gerenciar assinaturas.",
-      description:
-        "Bill sinaliza aumentos silenciosos, bloqueia cobrancas recorrentes suspeitas e pergunta antes das decisoes de cobranca que merecem sua atencao.",
-      primaryCta: "Solicitar acesso",
-      supportEyebrow: "Bill assistant",
-      supportRows: [
-        {
-          symbol: "Z",
-          merchant: "Z Cloud",
-          note: "Mudanca de preco detectada",
-          amount: "US$31.00",
-          time: "1 min atras",
-        },
-        {
-          symbol: "S",
-          merchant: "Streamline",
-          note: "Cobranca suspeita bloqueada",
-          amount: "US$89.00",
-          time: "3 min atras",
-        },
-        {
-          symbol: "D",
-          merchant: "Design Vault",
-          note: "9 meses ativo",
-          amount: "Revisar",
-          time: "Hoje",
-        },
-      ],
-      reviewCount: "3",
-      reviewEyebrow: "Decisao pronta",
-      reviewTitle: "Revise gasto recorrente com contexto.",
-      reviewDescription: "Deriva de preco, anomalias e renovacoes em uma camada calma.",
-    },
-    assistant: {
-      kicker: "Features",
-      title: "Menos vigilancia manual. Decisoes melhores nos momentos que importam.",
-      description:
-        "Bill nao e mais um dashboard pedindo atencao constante. E um assistente de assinaturas que entra quando o gasto recorrente muda, deriva ou deixa de fazer sentido.",
-      items: [
-        {
-          title: "Captura aumentos silenciosos",
-          text: "Perceba mudancas antes que elas entrem no seu gasto mensal sem aviso.",
-        },
-        {
-          title: "Revisa assinaturas antigas",
-          text: "Traz a decisao de volta quando voce esta pagando no automatico ha tempo demais.",
-        },
-        {
-          title: "Sinaliza cobrancas anormais",
-          text: "Bloqueia ou revisa o que ja nao combina com o merchant ou com o seu padrao.",
-        },
-      ],
-    },
-    scenarios: {
-      kicker: "Cenarios",
-      title: "Decisoes concretas, apresentadas com calma em vez de ruido.",
-      description:
-        "Bill transforma gasto recorrente em poucos momentos de alta relevancia: o que mudou, por que importa e o que fazer agora.",
-      items: [
-        {
-          tag: "Mudanca de preco detectada",
-          merchant: "Z Cloud",
-          amount: "US$24 -> US$31",
-          message:
-            "Seu plano subiu acima da faixa que voce costuma aprovar para este merchant.",
-          context: "A confianca no merchant e alta. A deriva de valor nao.",
-          primaryAction: "Aprovar preco",
-          secondaryAction: "Manter regra atual",
-        },
-        {
-          tag: "Bloqueado por comportamento incomum",
-          merchant: "Streamline Media",
-          amount: "Tentativa de US$89",
-          message:
-            "Bloqueamos uma tentativa de cobranca recorrente que nao combina com seu historico nesse merchant.",
-          context: "O descriptor mudou. O valor saiu da sua banda historica.",
-          primaryAction: "Manter bloqueio",
-          secondaryAction: "Liberar uma vez",
-        },
-        {
-          tag: "Hora de revisar",
-          merchant: "Design Vault",
-          amount: "US$19 / mes",
-          message:
-            "Voce paga essa assinatura ha 9 meses. Quer continuar ou cancelar na proxima renovacao?",
-          context: "Sem prompt recente. Gasto continuo sem decisao nova.",
-          primaryAction: "Manter por 30 dias",
-          secondaryAction: "Cancelar na renovacao",
-        },
-      ],
-    },
-    how: {
-      kicker: "Como funciona",
-      title: "Bill revisa pagamentos recorrentes em tres camadas simples.",
-      description:
-        "O sistema fica silencioso em comportamento normal e so pede atencao quando merchant, valor ou padrao sai do esperado.",
-      steps: [
-        {
-          number: "01",
-          title: "Detecta padroes de cobranca",
-          text: "Reconhece merchants recorrentes, descriptor patterns, bandas de valor e cadencia de renovacao.",
-        },
-        {
-          number: "02",
-          title: "Avalia confianca e desvio",
-          text: "Compara a cobranca com o historico do merchant, suas regras e o que costuma acontecer.",
-        },
-        {
-          number: "03",
-          title: "Notifica e sugere regras",
-          text: "Envia um prompt claro, uma recomendacao ou uma aprovacao silenciosa quando tudo segue normal.",
-        },
-      ],
-    },
-    infrastructure: {
-      kicker: "Infrastructure",
-      title: "Controle sem abrir mao, construido em trilhos praticos.",
-      description:
-        "Bill foi desenhado para a realidade da V1: fundos sob controle do usuario, decisoes balanced-risk no cartao e nenhum movimento autonomo da wallet por tras.",
-      bullets: [
-        "Sua wallet continua user-controlled.",
-        "O agent acompanha gasto no cartao, nao custodia.",
-        "Funding suggestions continuam consultivas na V1.",
-      ],
-      panelTitle: "O que Bill consegue fazer agora",
-      panelCopy:
-        "Aprovar comportamento recorrente normal, segurar mudancas suspeitas e devolver decisoes importantes de assinatura para voce com contexto.",
-      badges: [
-        "Wallet sob controle do usuario",
-        "Aprovacoes balanced-risk",
-        "Apenas funding suggestion",
-      ],
-      items: [
-        {
-          title: "Caminho Crossmint + Rain",
-          text: "O fluxo planejado para cartao continua alinhado com wallet e emissao no caminho oficial.",
-        },
-        {
-          title: "Rollout Brazil-first",
-          text: "O primeiro rollout fica local, enquanto a linguagem do produto continua clara.",
-        },
-        {
-          title: "Stack stablecoin-first",
-          text: "Pensado para trilhos modernos de spending sem forcar jargao de protocolo na experiencia.",
-        },
-        {
-          title: "Decisao balanced-risk",
-          text: "Comportamento recorrente confiavel deve passar em silencio. O incomum merece escrutinio.",
-        },
-      ],
-    },
-    form: {
-      kicker: "Solicitar acesso",
-      title: "O early access e curado.",
-      description:
-        "Conta como voce paga hoje, o quao perto ja esta de gastar com stablecoins e onde um assistente de assinaturas faria mais diferenca.",
-      fields: {
-        name: "Nome",
-        email: "Email",
-        country: "Pais",
-        stack: "Stack de pagamento atual",
-        reason: "Por que Bill agora",
-      },
-      placeholders: {
-        name: "Seu nome",
-        email: "nome@exemplo.com",
-        country: "Brasil, Estados Unidos, ...",
-        stack: "Apple Pay, transferencia bancaria, cartao, stablecoins ...",
-        reason: "Que gasto recorrente voce quer que um assistente acompanhe?",
-      },
-      submit: "Enviar aplicacao",
-      success:
-        "Aplicacao recebida. Vamos usar isso para desenhar a primeira onda de early access.",
-      note: "A V1 nao promete movimentacao autonoma da wallet.",
-      asideTitle: "Quem estamos priorizando",
-      asideItems: [
-        "Pessoas com gasto recorrente digital relevante",
-        "Usuarios que ja testam spending com stablecoin",
-        "Early adopters que querem menos surpresas e menos dashboards",
-      ],
-    },
-    footer: {
-      summary: "Bill e um assistente de assinaturas para gasto recorrente.",
-      rights: "Desenhado para a realidade da V1.",
     },
   },
 };
