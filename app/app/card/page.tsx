@@ -1,4 +1,5 @@
 import { getAccountView } from "../../../lib/data/account";
+import { DemoBanner } from "../_components/demo-banner";
 import styles from "../product-app.module.css";
 import { CardActions } from "./_components/card-actions";
 
@@ -11,7 +12,7 @@ function currency(value: number) {
 }
 
 export default async function CardPage() {
-  const { card, cardToken } = await getAccountView();
+  const { card, cardToken, live } = await getAccountView();
   const { controls, monthlySpending, subscriptions } = card;
   const cardSummary = {
     holder: card.holder,
@@ -26,6 +27,8 @@ export default async function CardPage() {
 
   return (
     <>
+      {!live ? <DemoBanner /> : null}
+
       <header className={styles.pageHeader}>
         <div>
           <h1>Card</h1>

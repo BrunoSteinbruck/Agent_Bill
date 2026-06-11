@@ -90,10 +90,12 @@ export async function POST(request: Request): Promise<Response> {
   const { error } = await db.from("waitlist").insert(entry);
 
   if (error) {
-    // Duplicate email (unique violation) — treat as success so we don't leak
-    // who's already on the list and the UX stays clean.
+    // Duplicate email (unique violation) — return the SAME response as a fresh
+    // signup (status + body identical) so nobody can probe whether an address
+    // is already on the list by diffing responses. The front-end only checks
+    // `ok`, so there's nothing to lose by collapsing the two cases.
     if (error.code === "23505") {
-      return json({ ok: true, alreadyOnList: true });
+      return json({ ok: true }, 201);
     }
     return serverError(error.message);
   }

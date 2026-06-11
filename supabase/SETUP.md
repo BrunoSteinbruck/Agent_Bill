@@ -64,6 +64,22 @@ Isso cria a tabela `waitlist` com:
 
 ---
 
+## 4b. Migration 0004 — um cartão/carteira por usuário
+
+1. **SQL Editor** → **New query**.
+2. Cole todo o conteúdo de `supabase/migrations/0004_one_wallet_one_card_per_user.sql`.
+3. **Run**.
+
+Adiciona `unique (user_id)` em `wallets` e `cards`. Isso garante **exatamente uma
+carteira e um cartão por usuário** — se dois logins simultâneos tentarem
+provisionar ao mesmo tempo, o banco barra o segundo (o código relê a linha que
+ganhou). Sem isso, linhas duplicadas quebrariam o dashboard.
+
+> Como ainda não há cartões/carteiras criados (o provisionamento depende das
+> chaves do Lithic/Crossmint), essa migration aplica sem conflito.
+
+---
+
 ## 5. Conferir se deu certo
 
 No **Table Editor**, abra a tabela `waitlist` e confirme:

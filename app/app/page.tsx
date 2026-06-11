@@ -1,4 +1,5 @@
 import { getAccountView } from "../../lib/data/account";
+import { DemoBanner } from "./_components/demo-banner";
 import styles from "./product-app.module.css";
 
 function currency(value: number) {
@@ -10,7 +11,7 @@ function currency(value: number) {
 }
 
 export default async function AppDashboardPage() {
-  const { dashboard: dashboardSummary } = await getAccountView();
+  const { dashboard: dashboardSummary, live } = await getAccountView();
   const maxHistoryValue = Math.max(
     1,
     ...dashboardSummary.history.map((point) => point.spend),
@@ -18,6 +19,8 @@ export default async function AppDashboardPage() {
 
   return (
     <>
+      {!live ? <DemoBanner /> : null}
+
       <header className={styles.pageHeader}>
         <div>
           <h1>Dashboard</h1>

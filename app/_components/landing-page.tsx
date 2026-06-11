@@ -5,12 +5,10 @@ import { FormEvent, useEffect, useState } from "react";
 import { siteCopy } from "../site-content";
 import styles from "./landing-page.module.css";
 
-const heroImageSrc = "/images/subscription-scenarios-triptych.png";
 const heroPosterSrc = "/images/hero-poster.webp";
 const heroVideoMp4Src = "/videos/hero.mp4";
 const heroVideoWebmSrc = "/videos/hero.webm";
 const brandImageSrc = "/images/bill-logo.png";
-const scenarioImagePositions = ["14% center", "50% center", "86% center"] as const;
 const featureMascotClasses = [
   "featureMascotSearch",
   "featureMascotNotebook",
@@ -107,8 +105,8 @@ export function LandingPage() {
           </a>
 
           <nav className={styles.nav}>
-            <a href="#features">{copy.navigation.features}</a>
-            <a href="#infrastructure">{copy.navigation.infrastructure}</a>
+            <a href="#problem">{copy.navigation.problem}</a>
+            <a href="#how">{copy.navigation.how}</a>
             <Link href="/docs/intro">{copy.navigation.docs}</Link>
           </nav>
 
@@ -182,15 +180,14 @@ export function LandingPage() {
         </div>
       </section>
 
-      <section id="features" className={styles.contentSection}>
+      <section id="problem" className={styles.contentSection}>
         <div className={styles.sectionHeading}>
-          <p className={styles.sectionKicker}>{copy.assistant.kicker}</p>
-          <h2>{copy.assistant.title}</h2>
-          <p>{copy.assistant.description}</p>
+          <p className={styles.sectionKicker}>{copy.problem.kicker}</p>
+          <h2>{copy.problem.title}</h2>
         </div>
 
         <div className={styles.featureGrid}>
-          {copy.assistant.items.map((item, index) => (
+          {copy.problem.items.map((item, index) => (
             <article key={item.title} className={styles.featureCard}>
               <div className={styles.featureIcon} aria-hidden="true">
                 <span
@@ -202,94 +199,40 @@ export function LandingPage() {
             </article>
           ))}
         </div>
+      </section>
 
-        <div className={styles.sectionBlock}>
-          <div className={styles.subsectionHeading}>
-            <p className={styles.sectionKicker}>{copy.scenarios.kicker}</p>
-            <h3>{copy.scenarios.title}</h3>
-            <p>{copy.scenarios.description}</p>
-          </div>
-
-          <div className={styles.scenarioGrid}>
-            {copy.scenarios.items.map((item, index) => (
-              <article key={item.tag} className={styles.scenarioCard}>
-                <div className={styles.scenarioImageFrame}>
-                  <img
-                    className={styles.scenarioImage}
-                    src={heroImageSrc}
-                    alt={item.tag}
-                    style={{ objectPosition: scenarioImagePositions[index] }}
-                  />
-                </div>
-                <div className={styles.scenarioTopline}>
-                  <span>{item.tag}</span>
-                  <strong>{item.amount}</strong>
-                </div>
-                <h3>{item.merchant}</h3>
-                <p className={styles.scenarioMessage}>{item.message}</p>
-                <p className={styles.scenarioContext}>{item.context}</p>
-                <div className={styles.messageActions}>
-                  <button type="button">{item.primaryAction}</button>
-                  <button type="button">{item.secondaryAction}</button>
-                </div>
-              </article>
-            ))}
-          </div>
+      <section id="how" className={styles.contentSection}>
+        <div className={styles.sectionHeading}>
+          <p className={styles.sectionKicker}>{copy.how.kicker}</p>
+          <h2>{copy.how.title}</h2>
         </div>
 
-        <div className={styles.sectionBlock}>
-          <div className={styles.subsectionHeading}>
-            <p className={styles.sectionKicker}>{copy.how.kicker}</p>
-            <h3>{copy.how.title}</h3>
-            <p>{copy.how.description}</p>
-          </div>
-
-          <div className={styles.stepsGrid}>
-            {copy.how.steps.map((step) => (
-              <article key={step.number} className={styles.stepCard}>
-                <span className={styles.stepNumber}>{step.number}</span>
-                <h3>{step.title}</h3>
-                <p>{step.text}</p>
-              </article>
-            ))}
-          </div>
+        <div className={styles.stepsGrid}>
+          {copy.how.steps.map((step) => (
+            <article key={step.number} className={styles.stepCard}>
+              <span className={styles.stepNumber}>{step.number}</span>
+              <h3>{step.title}</h3>
+              <p>{step.text}</p>
+            </article>
+          ))}
         </div>
       </section>
 
-      <section id="infrastructure" className={`${styles.contentSection} ${styles.infrastructureSection}`}>
+      <section
+        id="control"
+        className={`${styles.contentSection} ${styles.infrastructureSection}`}
+      >
         <div className={styles.sectionHeading}>
-          <p className={styles.sectionKicker}>{copy.infrastructure.kicker}</p>
-          <h2>{copy.infrastructure.title}</h2>
-          <p>{copy.infrastructure.description}</p>
+          <p className={styles.sectionKicker}>{copy.control.kicker}</p>
+          <h2>{copy.control.title}</h2>
         </div>
 
-        <div className={styles.infrastructureGrid}>
-          <div className={styles.infrastructureLeadCard}>
-            <div className={styles.cardHeader}>
-              <span>{copy.infrastructure.panelTitle}</span>
-              <div className={styles.headerPill}>{copy.ui.v1Scope}</div>
-            </div>
-            <p>{copy.infrastructure.panelCopy}</p>
-            <ul className={styles.infrastructureList}>
-              {copy.infrastructure.bullets.map((bullet) => (
-                <li key={bullet}>{bullet}</li>
-              ))}
-            </ul>
-            <div className={styles.badgeRow}>
-              {copy.infrastructure.badges.map((badge) => (
-                <span key={badge}>{badge}</span>
-              ))}
-            </div>
-          </div>
-
-          <div className={styles.trustGrid}>
-            {copy.infrastructure.items.map((item) => (
-              <article key={item.title} className={styles.trustCard}>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-              </article>
-            ))}
-          </div>
+        <div className={styles.trustGrid}>
+          {copy.control.points.map((point) => (
+            <article key={point} className={styles.trustCard}>
+              <h3>{point}</h3>
+            </article>
+          ))}
         </div>
       </section>
 

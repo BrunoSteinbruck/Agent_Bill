@@ -3,13 +3,10 @@ export type LocaleCode = "en";
 type SiteCopy = {
   ui: {
     brandDescriptor: string;
-    localeLabel: string;
-    v1Scope: string;
-    updatingLanguage: string;
   };
   navigation: {
-    features: string;
-    infrastructure: string;
+    problem: string;
+    how: string;
     docs: string;
     apply: string;
   };
@@ -26,46 +23,21 @@ type SiteCopy = {
       amount: string;
       time: string;
     }>;
-    reviewCount: string;
-    reviewEyebrow: string;
-    reviewTitle: string;
-    reviewDescription: string;
   };
-  assistant: {
+  problem: {
     kicker: string;
     title: string;
-    description: string;
     items: Array<{ title: string; text: string }>;
-  };
-  scenarios: {
-    kicker: string;
-    title: string;
-    description: string;
-    items: Array<{
-      tag: string;
-      merchant: string;
-      amount: string;
-      message: string;
-      context: string;
-      primaryAction: string;
-      secondaryAction: string;
-    }>;
   };
   how: {
     kicker: string;
     title: string;
-    description: string;
     steps: Array<{ number: string; title: string; text: string }>;
   };
-  infrastructure: {
+  control: {
     kicker: string;
     title: string;
-    description: string;
-    bullets: string[];
-    panelTitle: string;
-    panelCopy: string;
-    badges: string[];
-    items: Array<{ title: string; text: string }>;
+    points: string[];
   };
   form: {
     kicker: string;
@@ -101,20 +73,18 @@ export const siteCopy: Record<LocaleCode, SiteCopy> = {
   en: {
     ui: {
       brandDescriptor: "Your personal subscription agent",
-      localeLabel: "Locale selector",
-      v1Scope: "V1 scope",
-      updatingLanguage: "Updating language...",
     },
     navigation: {
-      features: "Features",
-      infrastructure: "Infrastructure",
+      problem: "Why Bill",
+      how: "How it works",
       docs: "Docs",
       apply: "Apply",
     },
     hero: {
       eyebrow: "Calm control for recurring spend",
       title: "All your subscriptions.\nYour Agent looking for you.",
-      description: "An easier way to keep control of your subscriptions",
+      description:
+        "Bill watches every recurring charge and only reaches out when something needs you — a price jump, a forgotten plan, a charge that doesn't fit.",
       primaryCta: "Apply for access",
       supportEyebrow: "Bill assistant notifications",
       supportRows: [
@@ -140,134 +110,60 @@ export const siteCopy: Record<LocaleCode, SiteCopy> = {
           time: "Today",
         },
       ],
-      reviewCount: "3",
-      reviewEyebrow: "Decision ready",
-      reviewTitle: "Review recurring spend with context.",
-      reviewDescription: "Price drift, anomalies, and renewals in one calm layer.",
     },
-    assistant: {
-      kicker: "Features",
-      title: "Less monitoring. Better decisions at the moments that matter.",
-      description:
-        "Bill is not another dashboard asking for constant attention. It is a subscription assistant that stays quiet until recurring spend changes, drifts, or stops making sense.",
+    problem: {
+      kicker: "Why Bill",
+      title: "Subscriptions drain you quietly.",
       items: [
         {
-          title: "Catch quiet price increases",
-          text: "Spot changes before they settle quietly into your monthly spend.",
+          title: "Silent price hikes",
+          text: "A $9 plan slips to $14 and nothing flags it.",
         },
         {
-          title: "Review old subscriptions",
-          text: "Prompt for a decision when you have been paying for too long on autopilot.",
+          title: "Forgotten plans",
+          text: "You keep paying for tools you stopped opening months ago.",
         },
         {
-          title: "Flag abnormal recurring charges",
-          text: "Block or review the charges that no longer fit the merchant or your pattern.",
-        },
-      ],
-    },
-    scenarios: {
-      kicker: "Scenarios",
-      title: "Concrete decisions, presented with calm instead of noise.",
-      description:
-        "Bill keeps recurring spend short and clear: what changed, why it matters, and what you can do next.",
-      items: [
-        {
-          tag: "Price change detected",
-          merchant: "Z Cloud",
-          amount: "$24 -> $31",
-          message:
-            "Your plan increased above the range you usually approve for this merchant.",
-          context: "Merchant trust is strong. Amount drift is not.",
-          primaryAction: "Approve price",
-          secondaryAction: "Keep current rule",
-        },
-        {
-          tag: "Blocked as unusual",
-          merchant: "Streamline Media",
-          amount: "$89 attempt",
-          message:
-            "We blocked a recurring charge attempt that does not match your history for this merchant.",
-          context: "Descriptor changed. Amount is outside your historical band.",
-          primaryAction: "Keep blocked",
-          secondaryAction: "Allow once",
-        },
-        {
-          tag: "Time to review",
-          merchant: "Design Vault",
-          amount: "$19 / month",
-          message:
-            "You have been paying for this subscription for 9 months. Keep it or cancel at renewal?",
-          context: "No recent approval prompt. Ongoing spend without a fresh decision.",
-          primaryAction: "Keep for 30 days",
-          secondaryAction: "Cancel at renewal",
+          title: "Charges that don't fit",
+          text: "A recurring charge sneaks through that never matched your history.",
         },
       ],
     },
     how: {
       kicker: "How it works",
-      title: "Bill reviews recurring payments in three clear layers.",
-      description:
-        "The system stays quiet for normal behavior and only asks for attention when a merchant, amount, or pattern moves outside expectations.",
+      title: "It watches, so you don't have to.",
       steps: [
         {
           number: "01",
-          title: "Detect billing patterns",
-          text: "Recognize recurring merchants, descriptor patterns, amount bands, and renewal cadence.",
+          title: "Learns your normal",
+          text: "Bill maps your recurring merchants, amounts, and renewal dates.",
         },
         {
           number: "02",
-          title: "Evaluate trust and drift",
-          text: "Compare the charge against merchant history, your rules, and what usually happens.",
+          title: "Watches every charge",
+          text: "Each charge is checked against your history and your rules.",
         },
         {
           number: "03",
-          title: "Notify and suggest rules",
-          text: "Send a clear prompt, a recommendation, or a quiet approval when behavior stays normal.",
+          title: "Asks only when it matters",
+          text: "Normal spend passes quietly. Anything off comes to you with context.",
         },
       ],
     },
-    infrastructure: {
-      kicker: "Infrastructure",
-      title: "Control without surrender, built on practical rails.",
-      description:
-        "Bill is designed for the V1 reality: user-controlled funds, balanced-risk card decisions, and no autonomous wallet movement behind the scenes.",
-      bullets: [
-        "Your wallet stays user-controlled.",
-        "The agent handles card spending, not custody.",
-        "Funding suggestions stay advisory in V1.",
-      ],
-      panelTitle: "What Bill can do now",
-      panelCopy:
-        "Approve normal recurring behavior, hold suspicious changes, and bring important subscription decisions back to you with context.",
-      badges: [
-        "User-controlled wallet",
-        "Balanced-risk approvals",
-        "Funding suggestions only",
-      ],
-      items: [
-        {
-          title: "Crossmint + Rain path",
-          text: "The planned card path stays aligned with the official wallet and issuance flow.",
-        },
-        {
-          title: "Brazil-first rollout",
-          text: "The first rollout stays local while the product language remains clear.",
-        },
-        {
-          title: "Stablecoin-first stack",
-          text: "Designed for modern spending rails without forcing protocol jargon into the product story.",
-        },
-        {
-          title: "Balanced-risk decisioning",
-          text: "Trusted recurring behavior should pass quietly. Unusual behavior should earn scrutiny.",
-        },
+    control: {
+      kicker: "Your money stays yours",
+      title: "Bill never moves your money.",
+      points: [
+        "Non-custodial — you hold your own funds.",
+        "Bill acts on the card, not your wallet.",
+        "Every action waits for your yes.",
       ],
     },
     form: {
       kicker: "Apply for access",
-      title: "Early access is curated.",
+      title: "Be one of the first.",
       description:
-        "Tell us how you pay today, how close you are to stablecoin spending, and where a subscription assistant would matter most.",
+        "We're letting people in a few at a time. Tell us how you spend, and we'll reach out.",
       fields: {
         name: "Name",
         email: "Email",
@@ -278,24 +174,24 @@ export const siteCopy: Record<LocaleCode, SiteCopy> = {
       placeholders: {
         name: "Your name",
         email: "name@example.com",
-        country: "Brazil, United States, ...",
+        country: "United States, United Kingdom, ...",
         stack: "Apple Pay, bank transfer, card, stablecoins ...",
-        reason: "What recurring spend do you want an assistant to watch?",
+        reason: "What recurring spend do you want an agent to watch?",
       },
       submit: "Submit application",
       success:
-        "Application received. We will use it to shape the first wave of early access.",
-      note: "No autonomous wallet movement is promised in V1.",
-      asideTitle: "Who we are prioritizing",
+        "Application received. We'll reach out as we open the next wave of access.",
+      note: "No autonomous wallet movement. Ever.",
+      asideTitle: "Who we're prioritizing",
       asideItems: [
-        "Users with meaningful recurring digital spend",
-        "People already testing stablecoin-backed spending",
-        "Early adopters who want fewer surprise charges, not more dashboards",
+        "People with real recurring digital spend",
+        "Anyone tired of surprise charges and price creep",
+        "Early adopters who want an agent, not another dashboard",
       ],
     },
     footer: {
-      summary: "Bill is a subscription assistant for recurring spend.",
-      rights: "Designed for the V1 reality.",
+      summary: "Bill — a calm agent for recurring spend.",
+      rights: "Built for the V1 reality.",
     },
   },
 };

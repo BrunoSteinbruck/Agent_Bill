@@ -74,14 +74,28 @@ export async function ensureUserProvisioned(
       .select("id, address, chain, crossmint_wallet_id")
       .single();
 
-    if (walletInsertErr || !insertedWallet) {
-      throw new Error(
-        `Wallet insert failed: ${walletInsertErr?.message ?? "no row"}`,
-      );
+    if (walletInsertErr) {
+      // Lost a provisioning race: a concurrent call already inserted the wallet
+      // (UNIQUE(user_id) → 23505). Use the winner's row; the wallet we just
+      // created at Crossmint is harmlessly orphaned.
+      if (walletInsertErr.code !== "23505") {
+        throw new Error(`Wallet insert failed: ${walletInsertErr.message}`);
+      }
+      const { data: raced } = await db
+        .from("wallets")
+        .select("id, address, chain, crossmint_wallet_id")
+        .eq("user_id", userId)
+        .single();
+      if (!raced) {
+        throw new Error("Wallet insert raced but no existing row was found.");
+      }
+      wallet = raced;
+    } else if (!insertedWallet) {
+      throw new Error("Wallet insert failed: no row returned.");
+    } else {
+      wallet = insertedWallet;
+      created = true;
     }
-
-    wallet = insertedWallet;
-    created = true;
   }
 
   // --- Card ---------------------------------------------------------------
@@ -119,14 +133,28 @@ export async function ensureUserProvisioned(
       .select("id, lithic_card_token, last_four, status")
       .single();
 
-    if (cardInsertErr || !insertedCard) {
-      throw new Error(
-        `Card insert failed: ${cardInsertErr?.message ?? "no row"}`,
-      );
+    if (cardInsertErr) {
+      // Lost a provisioning race: a concurrent call already inserted the card
+      // (UNIQUE(user_id) → 23505). Use the winner's row; the card we just issued
+      // at Lithic is harmlessly orphaned.
+      if (cardInsertErr.code !== "23505") {
+        throw new Error(`Card insert failed: ${cardInsertErr.message}`);
+      }
+      const { data: raced } = await db
+        .from("cards")
+        .select("id, lithic_card_token, last_four, status")
+        .eq("user_id", userId)
+        .single();
+      if (!raced) {
+        throw new Error("Card insert raced but no existing row was found.");
+      }
+      card = raced;
+    } else if (!insertedCard) {
+      throw new Error("Card insert failed: no row returned.");
+    } else {
+      card = insertedCard;
+      created = true;
     }
-
-    card = insertedCard;
-    created = true;
   }
 
   return { wallet, card, created };

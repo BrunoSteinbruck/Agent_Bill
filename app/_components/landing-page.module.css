@@ -66,13 +66,15 @@
 
 .brandMark {
   display: grid;
-  width: 2rem;
-  height: 2rem;
+  width: 3.25rem;
+  height: 3.25rem;
   place-items: center;
   overflow: hidden;
   border: 0;
   border-radius: 0;
   background: transparent;
+  flex-shrink: 0;
+  align-self: center;
 }
 
 .brandMarkImage {
