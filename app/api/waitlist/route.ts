@@ -68,10 +68,13 @@ export async function POST(request: Request): Promise<Response> {
     return json({ ok: true });
   }
 
-  const name = str(body.name, MAX.name);
   const email = str(body.email, MAX.email);
 
-  if (!name) return badRequest("name is required.");
+  // Email is the only required field. Name is optional on the lean apply form;
+  // default to "" so the not-null `name` column is satisfied. `stack` carries
+  // the monthly-spend band the form collects in place of country/reason.
+  const name = str(body.name, MAX.name) ?? "";
+
   if (!email || !EMAIL_RE.test(email)) {
     return badRequest("A valid email is required.");
   }

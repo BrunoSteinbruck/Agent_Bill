@@ -10,71 +10,52 @@ function currency(value: number) {
   }).format(value);
 }
 
+const BAR_MAX_PX = 210;
+
 export default async function AppDashboardPage() {
-  const { dashboard: dashboardSummary, live } = await getAccountView();
-  const maxHistoryValue = Math.max(
-    1,
-    ...dashboardSummary.history.map((point) => point.spend),
-  );
+  const { dashboard, live } = await getAccountView();
+  const maxSpend = Math.max(1, ...dashboard.history.map((point) => point.spend));
 
   return (
     <>
       {!live ? <DemoBanner /> : null}
 
-      <header className={styles.pageHeader}>
-        <div>
-          <h1>Dashboard</h1>
+      <div className={styles.viewHead}>
+        <h1>Dashboard</h1>
+        <span className={styles.when}>
+          <span className={styles.dot} aria-hidden="true" />
+          {dashboard.monthLabel}
+        </span>
+      </div>
+
+      <div className={styles.kpiRow}>
+        <div className={`${styles.card} ${styles.kpi}`}>
+          <span className={styles.cardLabel}>Monthly spend</span>
+          <div className={styles.statNum}>{currency(dashboard.monthlyCardSpend)}</div>
         </div>
-
-        <div className={styles.pageMeta}>
-          <span className={styles.metaDot} aria-hidden="true" />
-          <span>{dashboardSummary.monthLabel}</span>
+        <div className={`${styles.card} ${styles.kpi} ${styles.kpiTinted}`}>
+          <span className={styles.cardLabel}>Spendable now</span>
+          <div className={styles.statNum}>{currency(dashboard.spendableNow)}</div>
         </div>
-      </header>
+      </div>
 
-      <section className={styles.summaryGrid}>
-        <article className={styles.panel}>
-          <p className={styles.panelEyebrow}>Monthly spend</p>
-          <p className={styles.heroValue}>{currency(dashboardSummary.monthlyCardSpend)}</p>
-        </article>
-
-        <article className={`${styles.panel} ${styles.panelSecondary}`}>
-          <p className={styles.panelEyebrow}>Spendable now</p>
-          <p className={`${styles.statValue} ${styles.statValuePositive}`}>
-            {currency(dashboardSummary.spendableNow)}
-          </p>
-        </article>
-      </section>
-
-      <section className={`${styles.panel} ${styles.chartPanel}`}>
-        <div className={styles.pageHeader}>
-          <div>
-            <p className={styles.panelEyebrow}>Expenses</p>
-          </div>
-        </div>
-
-        <div className={styles.chartFrame}>
-          {dashboardSummary.history.map((point) => (
-            <div key={point.month} className={styles.chartColumn}>
-              <div className={styles.chartBars}>
-                <span
-                  className={styles.chartValue}
-                  style={{ bottom: `calc(${(point.spend / maxHistoryValue) * 100}% + 0.7rem)` }}
-                >
-                  {currency(point.spend)}
-                </span>
-                <div
-                  className={`${styles.chartBar} ${styles.chartBarSpend}`}
-                  style={{ height: `${(point.spend / maxHistoryValue) * 100}%` }}
-                  title={`Spend ${currency(point.spend)}`}
-                />
-              </div>
-              <span className={styles.chartMonth}>{point.month}</span>
+      <div className={`${styles.card} ${styles.chartCard}`}>
+        <span className={styles.cardLabel}>Expenses</span>
+        <div className={styles.bars}>
+          {dashboard.history.map((point) => (
+            <div key={point.month} className={styles.barCol}>
+              <span className={styles.bval}>{currency(point.spend)}</span>
+              <div
+                className={styles.bar}
+                style={{
+                  height: `${Math.max(8, Math.round((point.spend / maxSpend) * BAR_MAX_PX))}px`,
+                }}
+              />
+              <span className={styles.blabel}>{point.month}</span>
             </div>
           ))}
         </div>
-
-      </section>
+      </div>
     </>
   );
 }

@@ -2,6 +2,7 @@ import { getAccountView } from "../../../lib/data/account";
 import { DemoBanner } from "../_components/demo-banner";
 import styles from "../product-app.module.css";
 import { CardActions } from "./_components/card-actions";
+import { CardScreen } from "./_components/card-screen";
 
 function currency(value: number) {
   return new Intl.NumberFormat("en-US", {
@@ -11,189 +12,175 @@ function currency(value: number) {
   }).format(value);
 }
 
+function subscriptionTagClass(status: string): string {
+  switch (status) {
+    case "Needs review":
+      return styles.tagpReview;
+    case "Healthy":
+      return styles.tagpHealthy;
+    default:
+      return styles.tagpObserved;
+  }
+}
+
+/** Short month label for the bars: "January 2026" -> "January". */
+function shortMonth(month: string): string {
+  return month.replace(/\s+\d{4}$/, "");
+}
+
+const MS_BAR_MAX_PX = 120;
+
 export default async function CardPage() {
   const { card, cardToken, live } = await getAccountView();
-  const { controls, monthlySpending, subscriptions } = card;
-  const cardSummary = {
-    holder: card.holder,
-    last4: card.last4,
-    network: card.network,
-    status: card.status,
-    spendableNow: card.spendableNow,
-    walletLinkedValue: card.walletLinkedValue,
-    nextRenewal: card.nextRenewal,
-  };
-  const maxSpend = Math.max(1, ...monthlySpending.map((item) => item.total));
+  const { monthlySpending, subscriptions, controls } = card;
+
+  const maxTotal = Math.max(1, ...monthlySpending.map((m) => m.total));
+
+  // Legend = the distinct spend segments present, in first-seen order. Mock data
+  // carries the full Subscriptions/Tools/Travel/Ops breakdown; live data has a
+  // single "Spend" segment — both render correctly from this.
+  const legend: { label: string; color: string }[] = [];
+  for (const month of monthlySpending) {
+    for (const segment of month.segments) {
+      if (!legend.some((l) => l.label === segment.label)) {
+        legend.push({ label: segment.label, color: segment.color });
+      }
+    }
+  }
+
+  const cardRow = (
+    <div className={styles.cardRow}>
+      <div className={styles.vcard}>
+        <div className={styles.vcTop}>
+          <span className={styles.vcLabel}>{card.label}</span>
+          <span className={styles.chip} aria-hidden="true" />
+        </div>
+        <div className={styles.vcNum}>
+          ●●●● ●●●● ●●●● <b>{card.last4}</b>
+        </div>
+        <div className={styles.vcMeta}>
+          <div className={styles.vcName}>{card.holder}</div>
+          <div className={styles.vcBottom}>
+            <span className={styles.vcBrand}>{card.network}</span>
+            <span className={styles.vcActive}>{card.status}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className={`${styles.card} ${styles.posture}`}>
+        <span className={styles.cardLabel}>Card posture</span>
+        <div className={styles.postureGrid}>
+          <div>
+            <div className={styles.pl}>Available balance</div>
+            <div className={styles.pv}>{currency(card.spendableNow)}</div>
+          </div>
+          <div>
+            <div className={styles.pl}>Total balance</div>
+            <div className={styles.pv}>{currency(card.walletLinkedValue)}</div>
+          </div>
+          <div>
+            <div className={styles.pl}>Next renewal</div>
+            <div className={`${styles.pv} ${styles.pvDate}`}>{card.nextRenewal}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const overview = (
+    <>
+      <div className={`${styles.card} ${styles.ms} ${styles.sectionGap}`}>
+        <span className={styles.cardLabel}>Monthly spending</span>
+        <div className={styles.msBars}>
+          {monthlySpending.map((month) => (
+            <div key={month.month} className={styles.mb}>
+              <div
+                className={styles.mbBar}
+                style={{ height: `${Math.max(10, Math.round((month.total / maxTotal) * MS_BAR_MAX_PX))}px` }}
+              />
+              <span className={styles.mbL}>{shortMonth(month.month)}</span>
+            </div>
+          ))}
+        </div>
+        <div className={styles.msLegend}>
+          {legend.map((item) => (
+            <span key={item.label}>
+              <i style={{ background: item.color }} />
+              {item.label}
+            </span>
+          ))}
+        </div>
+        <div className={styles.brk}>
+          {monthlySpending
+            .slice()
+            .reverse()
+            .map((month) => (
+              <div key={month.month} className={styles.brkRow}>
+                <div className={styles.bl}>
+                  <b>{month.month}</b>
+                  <p>
+                    {month.segments
+                      .map((segment) => `${segment.label} ${currency(segment.amount)}`)
+                      .join(" · ")}
+                  </p>
+                </div>
+                <div className={styles.ba}>{currency(month.total)}</div>
+              </div>
+            ))}
+        </div>
+      </div>
+
+      <div className={`${styles.card} ${styles.subs} ${styles.sectionGap}`}>
+        <div className={styles.subHead}>
+          <span className={styles.cardLabel}>Subscriptions</span>
+          <h3>Recurring merchants with per-subscription limits</h3>
+        </div>
+        {subscriptions.map((subscription) => (
+          <div key={subscription.merchant} className={styles.subRow}>
+            <div className={styles.sl}>
+              <b>{subscription.merchant}</b>
+              <p>
+                Next charge {subscription.nextCharge} · {subscription.cyclesPaid} successful cycles
+              </p>
+            </div>
+            <div className={styles.sr}>
+              <span className={styles.amt}>{currency(subscription.amount)}</span>
+              <span className={styles.max}>Max {currency(subscription.maxAmount)}</span>
+              <span className={`${styles.tagp} ${subscriptionTagClass(subscription.status)}`}>
+                {subscription.status}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+
+  const controlsPanel = (
+    <>
+      <div className={styles.ctrlGrid}>
+        {controls.map((control) => (
+          <div key={control.label} className={`${styles.card} ${styles.ctrl}`}>
+            <div className={styles.pl}>{control.label}</div>
+            <div className={`${styles.pv} ${control.label === "Card state" ? styles.pvSmall : ""}`}>
+              {control.value}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className={`${styles.card} ${styles.actions}`}>
+        <span className={styles.cardLabel}>Actions</span>
+        <h3 className={styles.actionsTitle}>Manage live posture</h3>
+        <CardActions cardToken={cardToken} frozen={card.status === "Frozen"} />
+      </div>
+    </>
+  );
 
   return (
     <>
       {!live ? <DemoBanner /> : null}
-
-      <header className={styles.pageHeader}>
-        <div>
-          <h1>Card</h1>
-        </div>
-
-        <div className={styles.tabBar}>
-          <a className={styles.tabLink} href="#overview">
-            Overview
-          </a>
-          <a className={styles.tabLink} href="#spending">
-            Spending
-          </a>
-          <a className={styles.tabLink} href="#subscriptions">
-            Subscriptions
-          </a>
-          <a className={styles.tabLink} href="#controls">
-            Controls
-          </a>
-        </div>
-      </header>
-
-      <div className={styles.sectionStack}>
-        <section id="overview" className={styles.cardHero}>
-          <article className={styles.cardVisual}>
-            <div className={styles.cardVisualTop}>
-              <span className={styles.cardVisualBrand}>Bill virtual card</span>
-              <div className={styles.cardChip} aria-hidden="true" />
-            </div>
-
-            <p className={styles.cardNumber}>•••• •••• •••• {cardSummary.last4}</p>
-            <p className={styles.cardHolder}>{cardSummary.holder}</p>
-
-            <div className={styles.cardVisualBottom}>
-              <span>{cardSummary.network}</span>
-              <span>{cardSummary.status}</span>
-            </div>
-          </article>
-
-          <article className={`${styles.panel} ${styles.panelSecondary}`}>
-            <p className={styles.panelEyebrow}>Card posture</p>
-            <div className={styles.infoGrid}>
-              <div className={styles.infoCard}>
-                <span className={styles.infoLabel}>Available balance</span>
-                <strong className={styles.statValue}>{currency(cardSummary.spendableNow)}</strong>
-              </div>
-              <div className={styles.infoCard}>
-                <span className={styles.infoLabel}>Total balance</span>
-                <strong className={`${styles.statValue} ${styles.statValuePositive}`}>
-                  {currency(cardSummary.walletLinkedValue)}
-                </strong>
-              </div>
-              <div className={styles.infoCard}>
-                <span className={styles.infoLabel}>Next renewal</span>
-                <strong className={styles.statValue}>{cardSummary.nextRenewal}</strong>
-              </div>
-            </div>
-          </article>
-        </section>
-
-        <section id="spending" className={`${styles.panel} ${styles.sectionStack}`}>
-          <div>
-            <p className={styles.panelEyebrow}>Monthly spending</p>
-          </div>
-
-          <div className={styles.stackedChart}>
-            {monthlySpending.map((month) => (
-              <div key={month.month} className={styles.stackedColumn}>
-                <div className={styles.stackedBar}>
-                  {month.segments.map((segment) => (
-                    <div
-                      key={segment.label}
-                      className={styles.stackedSegment}
-                      style={{
-                        height: `${(segment.amount / maxSpend) * 100}%`,
-                        background: segment.color,
-                      }}
-                    />
-                  ))}
-                </div>
-                <span className={styles.chartMonth}>{month.month.replace(" 2026", "")}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className={styles.tagList}>
-            {monthlySpending[3].segments.map((segment) => (
-              <span key={segment.label} className={styles.tagItem}>
-                <span className={styles.tagSwatch} style={{ background: segment.color }} />
-                {segment.label}
-              </span>
-            ))}
-          </div>
-
-          <div className={styles.sectionStack}>
-            {monthlySpending
-              .slice()
-              .reverse()
-              .map((month) => (
-                <article key={month.month} className={styles.monthCard}>
-                  <div className={styles.monthCardHeader}>
-                    <strong className={styles.listTitle}>{month.month}</strong>
-                    <span className={styles.listValue}>{currency(month.total)}</span>
-                  </div>
-                  <div className={styles.tagList}>
-                    {month.segments.map((segment) => (
-                      <span key={segment.label} className={styles.tagItem}>
-                        <span className={styles.tagSwatch} style={{ background: segment.color }} />
-                        {segment.label} {currency(segment.amount)}
-                      </span>
-                    ))}
-                  </div>
-                </article>
-              ))}
-          </div>
-        </section>
-
-        <section id="subscriptions" className={`${styles.panel} ${styles.sectionStack}`}>
-          <div>
-            <p className={styles.panelEyebrow}>Subscriptions</p>
-            <h2 className={styles.alertTitle}>Recurring merchants with per-subscription limits</h2>
-          </div>
-
-          <div className={styles.list}>
-            {subscriptions.map((subscription) => (
-              <article key={subscription.merchant} className={styles.listRow}>
-                <div className={styles.listMeta}>
-                  <h3 className={styles.listTitle}>{subscription.merchant}</h3>
-                  <span className={styles.listSubtle}>
-                    Next charge {subscription.nextCharge} · {subscription.cyclesPaid} successful
-                    cycles
-                  </span>
-                </div>
-                <span className={styles.listValue}>{currency(subscription.amount)}</span>
-                <span className={styles.listSubtle}>Max {currency(subscription.maxAmount)}</span>
-                <span
-                  className={`${styles.statusPill} ${
-                    subscription.status === "Healthy"
-                      ? styles.statusHealthy
-                      : subscription.status === "Observed"
-                        ? styles.statusObserved
-                        : styles.statusReview
-                  }`}
-                >
-                  {subscription.status}
-                </span>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section id="controls" className={styles.controlsGrid}>
-          {controls.map((control) => (
-            <article key={control.label} className={`${styles.panel} ${styles.settingsCard}`}>
-              <p className={styles.panelEyebrow}>{control.label}</p>
-              <p className={styles.controlValue}>{control.value}</p>
-            </article>
-          ))}
-
-          <article className={`${styles.panel} ${styles.settingsCard}`}>
-            <p className={styles.panelEyebrow}>Actions</p>
-            <p className={styles.controlValue}>Manage live posture</p>
-            <CardActions cardToken={cardToken} frozen={cardSummary.status === "Frozen"} />
-          </article>
-        </section>
-      </div>
+      <CardScreen cardRow={cardRow} overview={overview} controls={controlsPanel} />
     </>
   );
 }

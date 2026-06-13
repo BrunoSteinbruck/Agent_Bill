@@ -1,197 +1,290 @@
 export type LocaleCode = "en";
 
+type AlertCard = {
+  /** Drives the accent color of the dot/label. */
+  kind: "warn" | "stop" | "idle";
+  label: string;
+  time: string;
+  title: string;
+  /** Mono "ledger" line. `metaDim` renders muted, after a separator. */
+  metaMain: string;
+  metaDim?: string;
+  body: string;
+  primaryAction: string;
+  secondaryAction: string;
+  /** When true the primary action is the filled (accent) button. */
+  primarySolid: boolean;
+};
+
+type Scenario = {
+  kind: "warn" | "stop" | "idle";
+  tag: string;
+  title: string;
+  text: string;
+  footStrong: string;
+  footRest: string;
+};
+
 type SiteCopy = {
-  ui: {
-    brandDescriptor: string;
-  };
-  navigation: {
-    problem: string;
-    how: string;
-    docs: string;
+  nav: {
+    links: Array<{ label: string; href: string }>;
+    signIn: string;
     apply: string;
   };
   hero: {
     eyebrow: string;
-    title: string;
-    description: string;
+    titleTop: string;
+    titleRest: string;
+    titleEmphasis: string;
+    sub: string;
     primaryCta: string;
-    supportEyebrow: string;
-    supportRows: Array<{
-      symbol: string;
-      merchant: string;
-      note: string;
-      amount: string;
-      time: string;
-    }>;
+    secondaryCta: string;
+    note: string;
+    alerts: AlertCard[];
   };
-  problem: {
-    kicker: string;
-    title: string;
+  features: {
+    eyebrow: string;
+    titleTop: string;
+    titleBottom: string;
+    lead: string;
     items: Array<{ title: string; text: string }>;
   };
+  scenarios: {
+    eyebrow: string;
+    titleTop: string;
+    titleBottom: string;
+    items: Scenario[];
+  };
   how: {
-    kicker: string;
-    title: string;
+    eyebrow: string;
+    titleTop: string;
+    titleBottom: string;
+    lead: string;
     steps: Array<{ number: string; title: string; text: string }>;
   };
-  control: {
-    kicker: string;
-    title: string;
-    points: string[];
+  security: {
+    eyebrow: string;
+    titleTop: string;
+    titleBottom: string;
+    items: Array<{ title: string; text: string }>;
   };
-  form: {
-    kicker: string;
+  apply: {
+    eyebrow: string;
     title: string;
-    description: string;
-    fields: {
-      name: string;
-      email: string;
-      country: string;
-      stack: string;
-      reason: string;
-    };
-    placeholders: {
-      name: string;
-      email: string;
-      country: string;
-      stack: string;
-      reason: string;
-    };
+    lead: string;
+    emailPlaceholder: string;
+    namePlaceholder: string;
+    spendLabel: string;
+    spendOptions: string[];
     submit: string;
+    fine: string;
     success: string;
-    note: string;
-    asideTitle: string;
-    asideItems: string[];
+    error: string;
   };
   footer: {
-    summary: string;
-    rights: string;
+    blurb: string;
+    columns: Array<{ title: string; links: Array<{ label: string; href: string }> }>;
+    copyright: string;
+    tagline: string;
   };
 };
 
 export const siteCopy: Record<LocaleCode, SiteCopy> = {
   en: {
-    ui: {
-      brandDescriptor: "Your personal subscription agent",
-    },
-    navigation: {
-      problem: "Why Bill",
-      how: "How it works",
-      docs: "Docs",
-      apply: "Apply",
+    nav: {
+      links: [
+        { label: "Features", href: "#features" },
+        { label: "Scenarios", href: "#scenarios" },
+        { label: "How it works", href: "#how" },
+        { label: "Security", href: "#security" },
+      ],
+      signIn: "Sign in",
+      apply: "Apply for access",
     },
     hero: {
-      eyebrow: "Calm control for recurring spend",
-      title: "All your subscriptions.\nYour Agent looking for you.",
-      description:
-        "Bill watches every recurring charge and only reaches out when something needs you — a price jump, a forgotten plan, a charge that doesn't fit.",
+      eyebrow: "Recurring-spend agent",
+      titleTop: "Quiet watch on",
+      titleRest: "every ",
+      titleEmphasis: "charge.",
+      sub: "Bill watches your virtual card for silent price hikes, charges that don't fit, and subscriptions you forgot — and stays quiet about everything that's normal.",
       primaryCta: "Apply for access",
-      supportEyebrow: "Bill assistant notifications",
-      supportRows: [
+      secondaryCta: "See how it works",
+      note: "No card required to apply",
+      alerts: [
         {
-          symbol: "A",
-          merchant: "Adobe Creative Cloud Pro",
-          note: "Price change detected",
-          amount: "$71.00",
-          time: "1 min ago",
+          kind: "warn",
+          label: "Price change",
+          time: "2m ago",
+          title: "Notion raised your plan",
+          metaMain: "$8.00 → $12.00 / mo",
+          metaDim: "+50%",
+          body: "Quietly increased on your last renewal.",
+          primaryAction: "Review",
+          secondaryAction: "Keep",
+          primarySolid: true,
         },
         {
-          symbol: "N",
-          merchant: "Netflixx",
-          note: "Suspicious charge blocked",
-          amount: "$69.00",
-          time: "3 min ago",
+          kind: "stop",
+          label: "Charge held",
+          time: "1h ago",
+          title: "Unfamiliar charge stopped",
+          metaMain: "GBL*DIGITAL · $89.90",
+          body: "Doesn't match your usual merchants. Approve to let it through.",
+          primaryAction: "Approve",
+          secondaryAction: "Keep blocked",
+          primarySolid: false,
         },
         {
-          symbol: "D",
-          merchant: "DaVinci Resolve",
-          note: "9 months active",
-          amount: "Review",
+          kind: "idle",
+          label: "Unused · 4mo",
           time: "Today",
+          title: "Still paying for Adobe CC",
+          metaMain: "$54.99 / mo",
+          metaDim: "last used Feb",
+          body: "No activity since February. Want to cancel it?",
+          primaryAction: "Cancel",
+          secondaryAction: "Keep",
+          primarySolid: true,
         },
       ],
     },
-    problem: {
-      kicker: "Why Bill",
-      title: "Subscriptions drain you quietly.",
+    features: {
+      eyebrow: "Less noise",
+      titleTop: "Less monitoring,",
+      titleBottom: "better decisions.",
+      lead: "Bill does the watching so you don't have to scan every statement looking for what changed.",
       items: [
         {
-          title: "Silent price hikes",
-          text: "A $9 plan slips to $14 and nothing flags it.",
+          title: "Speaks up only when it matters",
+          text: "Normal spend stays silent. You hear from Bill when a charge breaks your pattern — not before.",
         },
         {
-          title: "Forgotten plans",
-          text: "You keep paying for tools you stopped opening months ago.",
+          title: "Catches the silent stuff",
+          text: "Creeping price hikes and renewals you forgot about, surfaced before they quietly hit your card.",
         },
         {
-          title: "Charges that don't fit",
-          text: "A recurring charge sneaks through that never matched your history.",
+          title: "Recommends, never seizes",
+          text: "Bill acts at the card level and always asks first. Your wallet stays yours, every step of the way.",
+        },
+      ],
+    },
+    scenarios: {
+      eyebrow: "When Bill steps in",
+      titleTop: "Three moments",
+      titleBottom: "you won't have to catch.",
+      items: [
+        {
+          kind: "warn",
+          tag: "Price crept up",
+          title: "The $8 app that's now $12",
+          text: "A plan you've had for a year quietly raised its price. Bill flags the exact jump and offers a one-tap review.",
+          footStrong: "+50%",
+          footRest: "since the last renewal",
+        },
+        {
+          kind: "stop",
+          tag: "Charge looks wrong",
+          title: "A merchant you don't recognize",
+          text: "An unfamiliar name tries to pull $89.90. Bill holds it right at the card and waits for your call before anything moves.",
+          footStrong: "Held",
+          footRest: "· nothing left your wallet",
+        },
+        {
+          kind: "idle",
+          tag: "Forgotten subscription",
+          title: "The one you stopped opening",
+          text: "Four months without a single login, still billing every cycle. Bill surfaces it so you can cancel or keep — your choice.",
+          footStrong: "$54.99/mo",
+          footRest: "· last used in February",
         },
       ],
     },
     how: {
-      kicker: "How it works",
-      title: "It watches, so you don't have to.",
+      eyebrow: "How it works",
+      titleTop: "Pattern in.",
+      titleBottom: "Judgment out.",
+      lead: "No dashboard to babysit. Bill works in the background and only reaches you when there's a real call to make.",
       steps: [
         {
           number: "01",
-          title: "Learns your normal",
-          text: "Bill maps your recurring merchants, amounts, and renewal dates.",
+          title: "Detects patterns",
+          text: "Bill learns what your recurring spend normally looks like across cards, merchants, and cycles.",
         },
         {
           number: "02",
-          title: "Watches every charge",
-          text: "Each charge is checked against your history and your rules.",
+          title: "Scores confidence & deviation",
+          text: "Each charge is weighed for price drift, odd frequency, and how much it trusts the merchant.",
         },
         {
           number: "03",
-          title: "Asks only when it matters",
-          text: "Normal spend passes quietly. Anything off comes to you with context.",
+          title: "Notifies or acts",
+          text: "When something's off, Bill tells you, asks for a review, or holds the charge — and recommends a next step.",
         },
       ],
     },
-    control: {
-      kicker: "Your money stays yours",
-      title: "Bill never moves your money.",
-      points: [
-        "Non-custodial — you hold your own funds.",
-        "Bill acts on the card, not your wallet.",
-        "Every action waits for your yes.",
+    security: {
+      eyebrow: "Built to stay in your control",
+      titleTop: "The agent acts.",
+      titleBottom: "You stay in charge.",
+      items: [
+        {
+          title: "Your wallet, your keys",
+          text: "Bill never takes custody of your money. It works at the card level and only ever recommends — every action is yours to confirm.",
+        },
+        {
+          title: "Clean amounts, no noise",
+          text: "Settlement runs on a stablecoin stack underneath. On the surface you just see plain numbers — none of the technical detail.",
+        },
+        {
+          title: "Private by default",
+          text: "Your spending stays yours. Bill reads only what it needs to watch your card, and never sells or shares your data.",
+        },
       ],
     },
-    form: {
-      kicker: "Apply for access",
-      title: "Be one of the first.",
-      description:
-        "We're letting people in a few at a time. Tell us how you spend, and we'll reach out.",
-      fields: {
-        name: "Name",
-        email: "Email",
-        country: "Country",
-        stack: "Current payment stack",
-        reason: "Why Bill now",
-      },
-      placeholders: {
-        name: "Your name",
-        email: "name@example.com",
-        country: "United States, United Kingdom, ...",
-        stack: "Apple Pay, bank transfer, card, stablecoins ...",
-        reason: "What recurring spend do you want an agent to watch?",
-      },
-      submit: "Submit application",
-      success:
-        "Application received. We'll reach out as we open the next wave of access.",
-      note: "No autonomous wallet movement. Ever.",
-      asideTitle: "Who we're prioritizing",
-      asideItems: [
-        "People with real recurring digital spend",
-        "Anyone tired of surprise charges and price creep",
-        "Early adopters who want an agent, not another dashboard",
-      ],
+    apply: {
+      eyebrow: "Early access",
+      title: "Apply for access",
+      lead: "We're onboarding a small group at a time. Tell us a little about your recurring spend and we'll be in touch.",
+      emailPlaceholder: "Email address",
+      namePlaceholder: "Name (optional)",
+      spendLabel: "Monthly recurring spend",
+      spendOptions: ["Under $50", "$50 – $200", "$200 – $1,000", "$1,000+"],
+      submit: "Apply for access",
+      fine: "No card required to apply · We'll never share your details",
+      success: "Application received. We'll reach out as we open the next wave of access.",
+      error: "We couldn't submit that just now. Please try again.",
     },
     footer: {
-      summary: "Bill — a calm agent for recurring spend.",
-      rights: "Built for the V1 reality.",
+      blurb:
+        "The calm watch over your recurring spend. Fewer surprises on the statement, without one more dashboard to check.",
+      columns: [
+        {
+          title: "Product",
+          links: [
+            { label: "Features", href: "#features" },
+            { label: "How it works", href: "#how" },
+            { label: "Security", href: "#security" },
+            { label: "Early access", href: "#apply" },
+          ],
+        },
+        {
+          title: "Company",
+          links: [
+            { label: "About", href: "#" },
+            { label: "Careers", href: "#" },
+            { label: "Contact", href: "#" },
+          ],
+        },
+        {
+          title: "Legal",
+          links: [
+            { label: "Privacy", href: "#" },
+            { label: "Terms", href: "#" },
+          ],
+        },
+      ],
+      copyright: "© 2026 Bill",
+      tagline: "A quiet watch on every charge",
     },
   },
 };

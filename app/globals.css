@@ -1,7 +1,7 @@
 :root {
-  --font-display: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", "URW Palladio L",
-    Georgia, serif;
-  --font-body: "Avenir Next", "Optima", "Segoe UI", sans-serif;
+  --font-display: var(--font-newsreader), "Iowan Old Style", "Palatino Linotype",
+    "Book Antiqua", Georgia, serif;
+  --font-body: var(--font-geist), "Avenir Next", "Optima", "Segoe UI", sans-serif;
   --page-background: #05040a;
   --page-background-alt: #090713;
   --page-surface: #14101f;
@@ -34,6 +34,9 @@
 
 html {
   scroll-behavior: smooth;
+  /* Solid obsidian base for the canvas so the overscroll/rubber-band area
+     matches the header instead of flashing white. */
+  background-color: #090713;
 }
 
 body {

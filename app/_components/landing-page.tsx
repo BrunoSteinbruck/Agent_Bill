@@ -5,22 +5,29 @@ import { FormEvent, useEffect, useState } from "react";
 import { siteCopy } from "../site-content";
 import styles from "./landing-page.module.css";
 
-const heroPosterSrc = "/images/hero-poster.webp";
-const heroVideoMp4Src = "/videos/hero.mp4";
-const heroVideoWebmSrc = "/videos/hero.webm";
-const brandImageSrc = "/images/bill-logo.png";
-const featureMascotClasses = [
-  "featureMascotSearch",
-  "featureMascotNotebook",
-  "featureMascotShield",
-] as const;
+const brandImageSrc = "/images/bill-mark.png";
+const dashboardImageSrc = "/images/dashboard-crop.png";
+
+const alertKindClass = {
+  warn: styles.acWarn,
+  stop: styles.acStop,
+  idle: styles.acIdle,
+} as const;
+
+const scenarioKindClass = {
+  warn: styles.sWarn,
+  stop: styles.sStop,
+  idle: styles.sIdle,
+} as const;
+
+const alertSlotClass = [styles.c1, styles.c2, styles.c3] as const;
 
 export function LandingPage() {
+  const copy = siteCopy.en;
+
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [shouldRenderHeroVideo, setShouldRenderHeroVideo] = useState(false);
-  const [heroVideoFailed, setHeroVideoFailed] = useState(false);
   const [source, setSource] = useState<string | null>(null);
 
   useEffect(() => {
@@ -28,28 +35,6 @@ export function LandingPage() {
     const params = new URLSearchParams(window.location.search);
     setSource(params.get("utm_source") ?? params.get("ref"));
   }, []);
-
-  useEffect(() => {
-    const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-    const syncHeroMotion = () => {
-      const isDesktopViewport = window.innerWidth > 920;
-      setShouldRenderHeroVideo(isDesktopViewport && !reducedMotionQuery.matches);
-    };
-
-    syncHeroMotion();
-
-    reducedMotionQuery.addEventListener("change", syncHeroMotion);
-    window.addEventListener("resize", syncHeroMotion);
-
-    return () => {
-      reducedMotionQuery.removeEventListener("change", syncHeroMotion);
-      window.removeEventListener("resize", syncHeroMotion);
-    };
-  }, []);
-
-  const copy = siteCopy.en;
-  const showHeroVideo = shouldRenderHeroVideo && !heroVideoFailed;
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -64,11 +49,11 @@ export function LandingPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: data.get("name"),
           email: data.get("email"),
-          country: data.get("country"),
-          stack: data.get("stack"),
-          reason: data.get("reason"),
+          name: data.get("name"),
+          // The lean design form swaps country/reason for a single spend band;
+          // we store it in `stack` so the admin console still shows useful signal.
+          stack: data.get("spend"),
           company: data.get("company"),
           locale: "en",
           source,
@@ -89,232 +74,297 @@ export function LandingPage() {
   };
 
   return (
-    <main className={styles.page}>
-      <div className={styles.backgroundAura} />
-
-      <header className={styles.header}>
-        <div className={styles.headerInner}>
-          <a className={styles.brand} href="#top">
-            <span className={styles.brandMark} aria-hidden="true">
-              <img className={styles.brandMarkImage} src={brandImageSrc} alt="" />
-            </span>
-            <span className={styles.brandText}>
-              <span className={styles.brandName}>Bill</span>
-              <small>{copy.ui.brandDescriptor}</small>
-            </span>
+    <div className={styles.page}>
+      {/* ============== NAV ============== */}
+      <header className={styles.nav}>
+        <div className={`${styles.wrap} ${styles.navInner}`}>
+          <a className={styles.brand} href="#top" aria-label="Bill home">
+            <img className={styles.mark} src={brandImageSrc} alt="" />
+            <span>Bill</span>
           </a>
-
-          <nav className={styles.nav}>
-            <a href="#problem">{copy.navigation.problem}</a>
-            <a href="#how">{copy.navigation.how}</a>
-            <Link href="/docs/intro">{copy.navigation.docs}</Link>
+          <nav className={styles.navLinks}>
+            {copy.nav.links.map((link) => (
+              <a key={link.href} href={link.href}>
+                {link.label}
+              </a>
+            ))}
           </nav>
-
-          <div className={styles.headerActions}>
-            <a className={styles.headerCta} href="#apply">
-              {copy.navigation.apply}
+          <div className={styles.navRight}>
+            <Link className={styles.login} href="/login">
+              {copy.nav.signIn}
+            </Link>
+            <a className={`${styles.btn} ${styles.btnPrimary} ${styles.btnSm}`} href="#apply">
+              {copy.nav.apply}
             </a>
           </div>
         </div>
       </header>
 
-      <section id="top" className={styles.heroSection}>
-        <div className={styles.heroMediaLayer} aria-hidden="true">
-          <img className={styles.heroPoster} src={heroPosterSrc} alt="" />
-          {showHeroVideo ? (
-            <video
-              className={styles.heroVideo}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="auto"
-              poster={heroPosterSrc}
-              onError={() => setHeroVideoFailed(true)}
-            >
-              <source src={heroVideoWebmSrc} type="video/webm" />
-              <source src={heroVideoMp4Src} type="video/mp4" />
-            </video>
-          ) : null}
-        </div>
-
-        <div className={styles.heroShade} />
-        <div className={styles.heroGloss} />
-
-        <div className={styles.heroLayout}>
-          <div className={styles.heroCard}>
-            <p className={styles.heroCardEyebrow}>{copy.hero.eyebrow}</p>
-            <h1 className={styles.heroCardTitle}>{copy.hero.title}</h1>
-            <p className={styles.heroCardDescription}>{copy.hero.description}</p>
-
-            <div className={styles.heroActions}>
-              <a className={styles.primaryButton} href="#apply">
-                {copy.hero.primaryCta}
+      {/* ============== HERO ============== */}
+      <section className={styles.hero} id="top">
+        <div className={styles.wrap}>
+          <div className={styles.heroCopy}>
+            <span className={styles.eyebrow}>{copy.hero.eyebrow}</span>
+            <h1 className={styles.heroTitle}>
+              {copy.hero.titleTop}
+              <br />
+              {copy.hero.titleRest}
+              <em>{copy.hero.titleEmphasis}</em>
+            </h1>
+            <p className={styles.heroSub}>{copy.hero.sub}</p>
+            <div className={styles.heroCta}>
+              <a className={`${styles.btn} ${styles.btnPrimary}`} href="#apply">
+                {copy.hero.primaryCta} <span className={styles.arrow}>→</span>
+              </a>
+              <a className={`${styles.btn} ${styles.btnGhost}`} href="#how">
+                {copy.hero.secondaryCta}
               </a>
             </div>
+            <p className={styles.heroNote}>{copy.hero.note}</p>
           </div>
 
-          <div className={styles.heroSupportRail} aria-hidden="true">
-            <div className={`${styles.heroSupportSlot} ${styles.heroSupportSlotTop}`}>
-              <div className={`${styles.heroSupportCard} ${styles.heroMerchantCard}`}>
-                <p className={styles.heroSupportEyebrow}>{copy.hero.supportEyebrow}</p>
+          <div className={styles.heroVisual}>
+            <div className={styles.dashWindow}>
+              <div className={styles.winBar}>
+                <div className={styles.dots}>
+                  <i />
+                  <i />
+                  <i />
+                </div>
+                <span className={styles.winTitle}>app.bill · dashboard</span>
+              </div>
+              <img
+                className={styles.dashShot}
+                src={dashboardImageSrc}
+                alt="Bill dashboard — monthly spend and expenses"
+              />
+            </div>
 
-                <div className={styles.heroMerchantStack}>
-                  {copy.hero.supportRows.map((row) => (
-                    <div key={row.merchant} className={styles.heroMerchantRow}>
-                      <span className={styles.heroMerchantSymbol}>{row.symbol}</span>
-                      <div className={styles.heroMerchantBody}>
-                        <strong>{row.merchant}</strong>
-                        <span>{row.note}</span>
-                      </div>
-                      <div className={styles.heroMerchantMeta}>
-                        <strong>{row.amount}</strong>
-                        <span>{row.time}</span>
-                      </div>
-                    </div>
+            {copy.hero.alerts.map((alert, index) => (
+              <article
+                key={alert.title}
+                className={`${styles.alertCard} ${alertKindClass[alert.kind]} ${alertSlotClass[index]}`}
+              >
+                <div className={styles.acTop}>
+                  <span className={styles.acDot} />
+                  <span className={styles.acLabel}>{alert.label}</span>
+                  <span className={styles.acTime}>{alert.time}</span>
+                </div>
+                <h4>{alert.title}</h4>
+                <div className={styles.acMeta}>
+                  {alert.metaMain}
+                  {alert.metaDim ? <span className={styles.dim}> · {alert.metaDim}</span> : null}
+                </div>
+                <p>{alert.body}</p>
+                <div className={styles.acActions}>
+                  <span
+                    className={`${styles.acBtn} ${alert.primarySolid ? styles.solid : ""}`}
+                  >
+                    {alert.primaryAction}
+                  </span>
+                  <span className={styles.acBtn}>{alert.secondaryAction}</span>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============== FEATURES ============== */}
+      <section className={styles.section} id="features">
+        <div className={styles.wrap}>
+          <div className={styles.sectionHead}>
+            <span className={styles.eyebrow}>{copy.features.eyebrow}</span>
+            <h2 className={styles.sectionTitle}>
+              {copy.features.titleTop}
+              <br />
+              {copy.features.titleBottom}
+            </h2>
+            <p className={styles.lead}>{copy.features.lead}</p>
+          </div>
+          <div className={styles.featuresGrid}>
+            {copy.features.items.map((item) => (
+              <div key={item.title} className={styles.feature}>
+                <div className={styles.fIc}>
+                  <span />
+                </div>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============== SCENARIOS ============== */}
+      <section className={`${styles.section} ${styles.sectionTight}`} id="scenarios">
+        <div className={styles.wrap}>
+          <div className={styles.sectionHead}>
+            <span className={styles.eyebrow}>{copy.scenarios.eyebrow}</span>
+            <h2 className={styles.sectionTitle}>
+              {copy.scenarios.titleTop}
+              <br />
+              {copy.scenarios.titleBottom}
+            </h2>
+          </div>
+          <div className={styles.scnGrid}>
+            {copy.scenarios.items.map((scn) => (
+              <article key={scn.title} className={`${styles.scn} ${scenarioKindClass[scn.kind]}`}>
+                <span className={styles.scnTag}>{scn.tag}</span>
+                <h3>{scn.title}</h3>
+                <p>{scn.text}</p>
+                <div className={styles.scnFoot}>
+                  <b>{scn.footStrong}</b> {scn.footRest}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============== HOW IT WORKS ============== */}
+      <section className={styles.section} id="how">
+        <div className={styles.wrap}>
+          <div className={styles.sectionHead}>
+            <span className={styles.eyebrow}>{copy.how.eyebrow}</span>
+            <h2 className={styles.sectionTitle}>
+              {copy.how.titleTop}
+              <br />
+              {copy.how.titleBottom}
+            </h2>
+            <p className={styles.lead}>{copy.how.lead}</p>
+          </div>
+          <div className={styles.steps}>
+            {copy.how.steps.map((step) => (
+              <div key={step.number} className={styles.step}>
+                <span className={styles.stepN}>{step.number}</span>
+                <h3>{step.title}</h3>
+                <p>{step.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============== SECURITY / TRUST ============== */}
+      <section className={`${styles.section} ${styles.infra}`} id="security">
+        <div className={styles.wrap}>
+          <div className={styles.sectionHead}>
+            <span className={styles.eyebrow}>{copy.security.eyebrow}</span>
+            <h2 className={styles.sectionTitle}>
+              {copy.security.titleTop}
+              <br />
+              {copy.security.titleBottom}
+            </h2>
+          </div>
+          <div className={styles.infraGrid}>
+            {copy.security.items.map((item) => (
+              <div key={item.title} className={styles.trust}>
+                <h3>
+                  <span className={styles.glyph}>
+                    <i />
+                  </span>{" "}
+                  {item.title}
+                </h3>
+                <p>{item.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============== APPLY ============== */}
+      <section className={`${styles.section} ${styles.apply}`} id="apply">
+        <div className={styles.wrap}>
+          <div className={styles.applyCard}>
+            <span className={styles.eyebrow}>{copy.apply.eyebrow}</span>
+            <h2>{copy.apply.title}</h2>
+            <p className={styles.lead}>{copy.apply.lead}</p>
+            <form className={styles.applyForm} onSubmit={handleSubmit}>
+              {/* Honeypot — hidden from humans, catches bots. Do not remove. */}
+              <input
+                className={styles.honeypot}
+                type="text"
+                name="company"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+              />
+              <input
+                className={styles.field}
+                type="email"
+                name="email"
+                placeholder={copy.apply.emailPlaceholder}
+                autoComplete="email"
+                required
+              />
+              <div className={styles.row}>
+                <input
+                  className={styles.field}
+                  type="text"
+                  name="name"
+                  placeholder={copy.apply.namePlaceholder}
+                  autoComplete="name"
+                />
+                <select
+                  className={`${styles.field} ${styles.selectField}`}
+                  name="spend"
+                  defaultValue=""
+                  aria-label={copy.apply.spendLabel}
+                >
+                  <option value="" disabled>
+                    {copy.apply.spendLabel}
+                  </option>
+                  {copy.apply.spendOptions.map((option) => (
+                    <option key={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+              <button
+                className={`${styles.btn} ${styles.btnPrimary}`}
+                type="submit"
+                disabled={submitting}
+              >
+                {copy.apply.submit}
+              </button>
+            </form>
+            <p className={styles.applyFine}>{copy.apply.fine}</p>
+            {submitted ? <p className={styles.formSuccess}>{copy.apply.success}</p> : null}
+            {submitError ? <p className={styles.formError}>{copy.apply.error}</p> : null}
+          </div>
+        </div>
+      </section>
+
+      {/* ============== FOOTER ============== */}
+      <footer className={styles.footer}>
+        <div className={styles.wrap}>
+          <div className={styles.footerTop}>
+            <div className={styles.footerBrand}>
+              <a className={styles.brand} href="#top">
+                <img className={styles.mark} src={brandImageSrc} alt="" />
+                <span>Bill</span>
+              </a>
+              <p>{copy.footer.blurb}</p>
+            </div>
+            <div className={styles.footerCols}>
+              {copy.footer.columns.map((col) => (
+                <div key={col.title} className={styles.fcol}>
+                  <h5>{col.title}</h5>
+                  {col.links.map((link, i) => (
+                    <a key={`${link.label}-${i}`} href={link.href}>
+                      {link.label}
+                    </a>
                   ))}
                 </div>
-              </div>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
-
-      <section id="problem" className={styles.contentSection}>
-        <div className={styles.sectionHeading}>
-          <p className={styles.sectionKicker}>{copy.problem.kicker}</p>
-          <h2>{copy.problem.title}</h2>
-        </div>
-
-        <div className={styles.featureGrid}>
-          {copy.problem.items.map((item, index) => (
-            <article key={item.title} className={styles.featureCard}>
-              <div className={styles.featureIcon} aria-hidden="true">
-                <span
-                  className={`${styles.featureMascot} ${styles[featureMascotClasses[index]]}`}
-                />
-              </div>
-              <h3>{item.title}</h3>
-              <p>{item.text}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section id="how" className={styles.contentSection}>
-        <div className={styles.sectionHeading}>
-          <p className={styles.sectionKicker}>{copy.how.kicker}</p>
-          <h2>{copy.how.title}</h2>
-        </div>
-
-        <div className={styles.stepsGrid}>
-          {copy.how.steps.map((step) => (
-            <article key={step.number} className={styles.stepCard}>
-              <span className={styles.stepNumber}>{step.number}</span>
-              <h3>{step.title}</h3>
-              <p>{step.text}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section
-        id="control"
-        className={`${styles.contentSection} ${styles.infrastructureSection}`}
-      >
-        <div className={styles.sectionHeading}>
-          <p className={styles.sectionKicker}>{copy.control.kicker}</p>
-          <h2>{copy.control.title}</h2>
-        </div>
-
-        <div className={styles.trustGrid}>
-          {copy.control.points.map((point) => (
-            <article key={point} className={styles.trustCard}>
-              <h3>{point}</h3>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section id="apply" className={`${styles.contentSection} ${styles.formSection}`}>
-        <div className={styles.formIntro}>
-          <p className={styles.sectionKicker}>{copy.form.kicker}</p>
-          <h2>{copy.form.title}</h2>
-          <p>{copy.form.description}</p>
-          <div className={styles.formAside}>
-            <h3>{copy.form.asideTitle}</h3>
-            <ul>
-              {copy.form.asideItems.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
+          <div className={styles.footerBottom}>
+            <span>{copy.footer.copyright}</span>
+            <span>{copy.footer.tagline}</span>
           </div>
         </div>
-
-        <form className={styles.applicationForm} onSubmit={handleSubmit}>
-          {/* Honeypot — hidden from humans, catches bots. Do not remove. */}
-          <input
-            className={styles.honeypot}
-            type="text"
-            name="company"
-            tabIndex={-1}
-            autoComplete="off"
-            aria-hidden="true"
-          />
-
-          <label>
-            <span>{copy.form.fields.name}</span>
-            <input name="name" placeholder={copy.form.placeholders.name} required />
-          </label>
-
-          <label>
-            <span>{copy.form.fields.email}</span>
-            <input
-              name="email"
-              type="email"
-              placeholder={copy.form.placeholders.email}
-              required
-            />
-          </label>
-
-          <label>
-            <span>{copy.form.fields.country}</span>
-            <input name="country" placeholder={copy.form.placeholders.country} required />
-          </label>
-
-          <label>
-            <span>{copy.form.fields.stack}</span>
-            <input name="stack" placeholder={copy.form.placeholders.stack} required />
-          </label>
-
-          <label>
-            <span>{copy.form.fields.reason}</span>
-            <textarea
-              name="reason"
-              rows={5}
-              placeholder={copy.form.placeholders.reason}
-              required
-            />
-          </label>
-
-          <button className={styles.primaryButton} type="submit" disabled={submitting}>
-            {copy.form.submit}
-          </button>
-
-          <p className={styles.formNote}>{copy.form.note}</p>
-          {submitted ? <p className={styles.formSuccess}>{copy.form.success}</p> : null}
-          {submitError ? (
-            <p className={styles.formNote}>
-              We couldn&apos;t submit that just now. Please try again.
-            </p>
-          ) : null}
-        </form>
-      </section>
-
-      <footer className={styles.footer}>
-        <p>{copy.footer.summary}</p>
-        <small>{copy.footer.rights}</small>
       </footer>
-    </main>
+    </div>
   );
 }
