@@ -132,12 +132,10 @@
   letter-spacing: -0.01em;
 }
 .mark {
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
+  width: 45px;
+  height: 45px;
   display: block;
   object-fit: contain;
-  box-shadow: 0 4px 16px -5px rgba(139, 92, 246, 0.7);
 }
 .navLinks {
   display: flex;
@@ -284,6 +282,8 @@
   position: relative;
   margin-top: 76px;
   min-height: 540px;
+  /* "How it is" anchors here; offset for the sticky nav. */
+  scroll-margin-top: 96px;
 }
 .dashWindow {
   position: absolute;
@@ -342,6 +342,18 @@
   padding: 17px 18px 16px;
   box-shadow: 0 28px 70px -22px rgba(0, 0, 0, 0.92);
   z-index: 3;
+}
+.draggable {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: box-shadow 0.2s;
+}
+.draggable:active {
+  cursor: grabbing;
+  z-index: 5;
+  box-shadow: 0 36px 90px -20px rgba(0, 0, 0, 0.95);
 }
 .acTop {
   display: flex;
@@ -632,20 +644,19 @@
   letter-spacing: -0.01em;
 }
 .glyph {
-  width: 22px;
-  height: 22px;
-  border-radius: 6px;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
   flex-shrink: 0;
   border: 1px solid rgba(139, 92, 246, 0.4);
   background: rgba(139, 92, 246, 0.12);
   display: grid;
   place-items: center;
+  color: var(--accent);
 }
-.glyph i {
-  width: 8px;
-  height: 8px;
-  border-radius: 2px;
-  background: var(--accent);
+.glyph svg {
+  width: 17px;
+  height: 17px;
 }
 .trust p {
   margin-top: 13px;

@@ -1,5 +1,8 @@
 export type LocaleCode = "en";
 
+/** Icon keys for the security/trust cards; mapped to SVGs in the component. */
+export type TrustIcon = "wallet" | "clean" | "shield";
+
 type AlertCard = {
   /** Drives the accent color of the dot/label. */
   kind: "warn" | "stop" | "idle";
@@ -42,14 +45,15 @@ type SiteCopy = {
     note: string;
     alerts: AlertCard[];
   };
-  features: {
+  // Commented out in the landing page for now (kept here as the template).
+  features?: {
     eyebrow: string;
     titleTop: string;
     titleBottom: string;
     lead: string;
     items: Array<{ title: string; text: string }>;
   };
-  scenarios: {
+  scenarios?: {
     eyebrow: string;
     titleTop: string;
     titleBottom: string;
@@ -66,7 +70,7 @@ type SiteCopy = {
     eyebrow: string;
     titleTop: string;
     titleBottom: string;
-    items: Array<{ title: string; text: string }>;
+    items: Array<{ title: string; text: string; icon: TrustIcon }>;
   };
   apply: {
     eyebrow: string;
@@ -93,8 +97,7 @@ export const siteCopy: Record<LocaleCode, SiteCopy> = {
   en: {
     nav: {
       links: [
-        { label: "Features", href: "#features" },
-        { label: "Scenarios", href: "#scenarios" },
+        { label: "How it is", href: "#preview" },
         { label: "How it works", href: "#how" },
         { label: "Security", href: "#security" },
       ],
@@ -106,7 +109,7 @@ export const siteCopy: Record<LocaleCode, SiteCopy> = {
       titleTop: "Quiet watch on",
       titleRest: "every ",
       titleEmphasis: "charge.",
-      sub: "Bill watches your virtual card for silent price hikes, charges that don't fit, and subscriptions you forgot — and stays quiet about everything that's normal.",
+      sub: "Bill watches your virtual card for silent price hikes, charges that don't fit, and subscriptions you forgot.",
       primaryCta: "Apply for access",
       secondaryCta: "See how it works",
       note: "No card required to apply",
@@ -118,8 +121,8 @@ export const siteCopy: Record<LocaleCode, SiteCopy> = {
           title: "Notion raised your plan",
           metaMain: "$8.00 → $12.00 / mo",
           metaDim: "+50%",
-          body: "Quietly increased on your last renewal.",
-          primaryAction: "Review",
+          body: "Increased on your last renewal.",
+          primaryAction: "Cancel",
           secondaryAction: "Keep",
           primarySolid: true,
         },
@@ -132,8 +135,8 @@ export const siteCopy: Record<LocaleCode, SiteCopy> = {
           body: "Doesn't match your usual merchants. Approve to let it through.",
           primaryAction: "Approve",
           secondaryAction: "Keep blocked",
-          primarySolid: false,
-        },
+          primarySolid: true,
+        },    
         {
           kind: "idle",
           label: "Unused · 4mo",
@@ -148,15 +151,17 @@ export const siteCopy: Record<LocaleCode, SiteCopy> = {
         },
       ],
     },
+    /*
     features: {
+      
       eyebrow: "Less noise",
       titleTop: "Less monitoring,",
       titleBottom: "better decisions.",
-      lead: "Bill does the watching so you don't have to scan every statement looking for what changed.",
+      lead: "Bill does the watching so you don't have to.",
       items: [
         {
           title: "Speaks up only when it matters",
-          text: "Normal spend stays silent. You hear from Bill when a charge breaks your pattern — not before.",
+          text: "Normal spend stays silent. You hear from Bill when a charge breaks your pattern. Not before.",
         },
         {
           title: "Catches the silent stuff",
@@ -168,6 +173,7 @@ export const siteCopy: Record<LocaleCode, SiteCopy> = {
         },
       ],
     },
+    
     scenarios: {
       eyebrow: "When Bill steps in",
       titleTop: "Three moments",
@@ -199,6 +205,7 @@ export const siteCopy: Record<LocaleCode, SiteCopy> = {
         },
       ],
     },
+    */
     how: {
       eyebrow: "How it works",
       titleTop: "Pattern in.",
@@ -213,12 +220,12 @@ export const siteCopy: Record<LocaleCode, SiteCopy> = {
         {
           number: "02",
           title: "Scores confidence & deviation",
-          text: "Each charge is weighed for price drift, odd frequency, and how much it trusts the merchant.",
+          text: "Each charge is weighed for price drift, odd frequency, and how trustworthy the merchant is, based on your activity and every other user's.",
         },
         {
           number: "03",
           title: "Notifies or acts",
-          text: "When something's off, Bill tells you, asks for a review, or holds the charge — and recommends a next step.",
+          text: "When something's off: Bill tells you, asks for a review, and recommends a next step.",
         },
       ],
     },
@@ -228,14 +235,17 @@ export const siteCopy: Record<LocaleCode, SiteCopy> = {
       titleBottom: "You stay in charge.",
       items: [
         {
+          icon: "wallet",
           title: "Your wallet, your keys",
-          text: "Bill never takes custody of your money. It works at the card level and only ever recommends — every action is yours to confirm.",
+          text: "Bill never takes custody of your money. It works at the card level and only ever recommends actions, every other action is yours to confirm.",
         },
         {
+          icon: "clean",
           title: "Clean amounts, no noise",
           text: "Settlement runs on a stablecoin stack underneath. On the surface you just see plain numbers — none of the technical detail.",
         },
         {
+          icon: "shield",
           title: "Private by default",
           text: "Your spending stays yours. Bill reads only what it needs to watch your card, and never sells or shares your data.",
         },
@@ -261,7 +271,7 @@ export const siteCopy: Record<LocaleCode, SiteCopy> = {
         {
           title: "Product",
           links: [
-            { label: "Features", href: "#features" },
+            { label: "How it is", href: "#preview" },
             { label: "How it works", href: "#how" },
             { label: "Security", href: "#security" },
             { label: "Early access", href: "#apply" },

@@ -1,9 +1,35 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useEffect, useState } from "react";
-import { siteCopy } from "../site-content";
+import { FormEvent, PointerEvent as ReactPointerEvent, ReactNode, useEffect, useRef, useState } from "react";
+import { siteCopy, type TrustIcon } from "../site-content";
 import styles from "./landing-page.module.css";
+
+type Offset = { x: number; y: number };
+
+// Line icons (Lucide-style, 24px grid) for the security/trust cards. They
+// inherit the purple accent through `stroke="currentColor"` + the .glyph color.
+const trustIcons: Record<TrustIcon, ReactNode> = {
+  wallet: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" />
+      <path d="M3 5v14a2 2 0 0 0 2 2h16v-5" />
+      <path d="M18 12a2 2 0 0 0 0 4h4v-4Z" />
+    </svg>
+  ),
+  clean: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M9.94 14.06 8.5 14.5l-6.14-1.58a.5.5 0 0 1 0-.96L8.5 9.94 9.94 8.5l1.58-6.14a.5.5 0 0 1 .96 0L14.06 8.5l1.44 1.44 6.14 1.58a.5.5 0 0 1 0 .96L15.5 14.5l-1.44 1.56-1.58 6.14a.5.5 0 0 1-.96 0Z" />
+      <path d="M20 3v4M22 5h-4M4 17v2M5 18H3" />
+    </svg>
+  ),
+  shield: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1Z" />
+      <path d="m9 12 2 2 4-4" />
+    </svg>
+  ),
+};
 
 const brandImageSrc = "/images/bill-mark.png";
 const dashboardImageSrc = "/images/dashboard-crop.png";
@@ -29,6 +55,47 @@ export function LandingPage() {
   const [submitError, setSubmitError] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [source, setSource] = useState<string | null>(null);
+
+  // Drag-to-rearrange the floating alert cards. Each card keeps an (x, y)
+  // offset applied on top of its CSS corner position via a transform.
+  const [offsets, setOffsets] = useState<Record<number, Offset>>({});
+  const drag = useRef<{
+    index: number;
+    startX: number;
+    startY: number;
+    origin: Offset;
+  } | null>(null);
+
+  const handleCardPointerDown =
+    (index: number) => (event: ReactPointerEvent<HTMLElement>) => {
+      // Ignore drags that start on the action buttons.
+      if ((event.target as HTMLElement).closest(`.${styles.acBtn}`)) return;
+      event.preventDefault();
+      drag.current = {
+        index,
+        startX: event.clientX,
+        startY: event.clientY,
+        origin: offsets[index] ?? { x: 0, y: 0 },
+      };
+      event.currentTarget.setPointerCapture(event.pointerId);
+    };
+
+  const handleCardPointerMove = (event: ReactPointerEvent<HTMLElement>) => {
+    const d = drag.current;
+    if (!d) return;
+    const next: Offset = {
+      x: d.origin.x + (event.clientX - d.startX),
+      y: d.origin.y + (event.clientY - d.startY),
+    };
+    setOffsets((prev) => ({ ...prev, [d.index]: next }));
+  };
+
+  const handleCardPointerUp = (event: ReactPointerEvent<HTMLElement>) => {
+    if (drag.current) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+      drag.current = null;
+    }
+  };
 
   useEffect(() => {
     // Acquisition attribution: prefer utm_source, fall back to a ?ref= tag.
@@ -123,7 +190,7 @@ export function LandingPage() {
             <p className={styles.heroNote}>{copy.hero.note}</p>
           </div>
 
-          <div className={styles.heroVisual}>
+          <div className={styles.heroVisual} id="preview">
             <div className={styles.dashWindow}>
               <div className={styles.winBar}>
                 <div className={styles.dots}>
@@ -143,7 +210,18 @@ export function LandingPage() {
             {copy.hero.alerts.map((alert, index) => (
               <article
                 key={alert.title}
-                className={`${styles.alertCard} ${alertKindClass[alert.kind]} ${alertSlotClass[index]}`}
+                className={`${styles.alertCard} ${alertKindClass[alert.kind]} ${alertSlotClass[index]} ${styles.draggable}`}
+                style={
+                  offsets[index]
+                    ? {
+                        transform: `translate(${offsets[index].x}px, ${offsets[index].y}px)`,
+                      }
+                    : undefined
+                }
+                onPointerDown={handleCardPointerDown(index)}
+                onPointerMove={handleCardPointerMove}
+                onPointerUp={handleCardPointerUp}
+                onPointerCancel={handleCardPointerUp}
               >
                 <div className={styles.acTop}>
                   <span className={styles.acDot} />
@@ -170,7 +248,8 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* ============== FEATURES ============== */}
+      {/*
+      FEATURES — kept as template, not rendered for now.
       <section className={styles.section} id="features">
         <div className={styles.wrap}>
           <div className={styles.sectionHead}>
@@ -196,7 +275,7 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* ============== SCENARIOS ============== */}
+      SCENARIOS — kept as template, not rendered for now.
       <section className={`${styles.section} ${styles.sectionTight}`} id="scenarios">
         <div className={styles.wrap}>
           <div className={styles.sectionHead}>
@@ -221,6 +300,7 @@ export function LandingPage() {
           </div>
         </div>
       </section>
+      */}
 
       {/* ============== HOW IT WORKS ============== */}
       <section className={styles.section} id="how">
@@ -261,9 +341,7 @@ export function LandingPage() {
             {copy.security.items.map((item) => (
               <div key={item.title} className={styles.trust}>
                 <h3>
-                  <span className={styles.glyph}>
-                    <i />
-                  </span>{" "}
+                  <span className={styles.glyph}>{trustIcons[item.icon]}</span>{" "}
                   {item.title}
                 </h3>
                 <p>{item.text}</p>
