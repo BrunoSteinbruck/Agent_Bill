@@ -54,9 +54,7 @@ const DECISION_SCHEMA = {
     },
     confidence: {
       type: "number",
-      minimum: 0,
-      maximum: 1,
-      description: "Certainty in the decision, 0 to 1.",
+      description: "Certainty in the decision, from 0 to 1.",
     },
     userMessage: {
       type: ["string", "null"],
