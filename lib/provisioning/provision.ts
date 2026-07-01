@@ -61,6 +61,7 @@ export async function ensureUserProvisioned(
   if (!wallet) {
     const crossmintWallet = await createWallet({
       linkedUser: `userId:${userId}`,
+      ownerEmail: email,
     });
 
     const { data: insertedWallet, error: walletInsertErr } = await db

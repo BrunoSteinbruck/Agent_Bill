@@ -60,6 +60,8 @@ export interface CrossmintWallet {
  */
 export async function createWallet(params: {
   linkedUser: string;
+  /** The user's email — becomes the wallet's admin signer (they control it). */
+  ownerEmail: string;
   chain?: string;
 }): Promise<CrossmintWallet> {
   const chain = params.chain ?? "polygon";
@@ -71,7 +73,12 @@ export async function createWallet(params: {
     body: JSON.stringify({
       type: "smart",
       chainType: "evm",
-      linkedUser: params.linkedUser,
+      // The user owns the wallet; `owner` ties it to your user so it survives
+      // across sessions (e.g. `userId:<uuid>` or `email:user@example.com`).
+      owner: params.linkedUser,
+      // Email admin signer: the user controls the wallet via their email. Bill
+      // never holds the keys and never signs — it only reads address/balance.
+      config: { adminSigner: { type: "email", email: params.ownerEmail } },
     }),
   });
 
@@ -91,8 +98,14 @@ export async function getWalletBalances(
 ): Promise<WalletBalance[]> {
   const query = new URLSearchParams({ tokens: tokens.join(",") });
   const data = await crossmintFetch<
-    Array<{ token: string; amount: string; chain: string }>
+    Array<{ symbol: string; amount: string; chains?: Record<string, unknown> }>
   >(`/api/${API_VERSION}/wallets/${encodeURIComponent(walletLocator)}/balances?${query}`);
 
-  return data.map((b) => ({ token: b.token, amount: b.amount, chain: b.chain }));
+  // Response items are keyed by `symbol`, with an `amount` already decimal-
+  // adjusted and a `chains` map (one entry per chain the balance sits on).
+  return data.map((b) => ({
+    token: b.symbol,
+    amount: b.amount,
+    chain: b.chains ? (Object.keys(b.chains)[0] ?? "") : "",
+  }));
 }
