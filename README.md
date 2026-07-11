@@ -8,6 +8,21 @@ never seizes: the money and the account always stay under the user's control.
 **Live:** [agent-bill.vercel.app](https://agent-bill.vercel.app) · runs against
 Lithic **sandbox** and Crossmint **staging** (no real money moves yet).
 
+## Screenshots
+
+**Landing** — the hero, with live alert cards showing the kind of thing Bill catches.
+
+![Bill landing page](docs/screenshots/landing.png)
+
+**Dashboard** — monthly spend, what's still spendable, and a 4-month expense trend.
+
+![Bill dashboard](docs/screenshots/dashboard.png)
+
+**Card & subscriptions** — the virtual card, spend history, and the recurring
+merchants Bill tracks, each with a per-subscription limit and a health status.
+
+![Bill card and subscriptions](docs/screenshots/card.png)
+
 ---
 
 ## What it does
